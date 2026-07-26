@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>সাইট রিপোর্ট</title>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Noto+Sans+Bengali:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#16232e;
+    --ink-soft:#3c4b58;
+    --paper:#eceee8;
+    --surface:#ffffff;
+    --line:#c9d2d1;
+    --line-blue:#2c5f7c;
+    --line-blue-soft:#c3d3da;
+    --accent:#f2a900;
+    --accent-ink:#5c3d00;
+    --alert:#b23a22;
+    --good:#2f7d5a;
+    --mid:#c98a12;
+    --radius:2px;
+  }
+
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--paper);
+    background-image:
+      linear-gradient(var(--line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--line) 1px, transparent 1px);
+    background-size:26px 26px;
+    background-attachment:fixed;
+    color:var(--ink);
+    font-family:'Noto Sans Bengali','Inter',sans-serif;
+    -webkit-tap-highlight-color:transparent;
+    padding-bottom:60px;
+  }
+
+  .eyebrow{
+    font-family:'Oswald',sans-serif;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    font-size:11px;
+    color:var(--line-blue);
+    font-weight:600;
+  }
+
+  /* ---------- Header / stamp ---------- */
+  header{
+    position:sticky; top:0; z-index:50;
+    background:var(--ink);
+    color:#fff;
+    padding:16px 18px 14px;
+    box-shadow:0 2px 10px rgba(0,0,0,.15);
+  }
+  .head-row{display:flex; align-items:center; justify-content:space-between; gap:12px;}
+  .brand{display:flex; align-items:center; gap:10px;}
+  .brand .mark{
+    width:34px;height:34px;border:2px solid var(--accent);
+    display:flex;align-items:center;justify-content:center;
+    font-size:17px; flex:none;
+  }
+  .brand h1{
+    font-family:'Oswald',sans-serif;
+    font-size:16px; letter-spacing:.05em; margin:0; text-transform:uppercase;
+  }
+  .brand p{margin:1px 0 0; font-size:11px; color:#b9c3ca; font-family:'JetBrains Mono',monospace;}
+  .date-chip{
+    font-family:'JetBrains Mono',monospace; font-size:11px;
+    border:1px solid rgba(255,255,255,.25); padding:5px 8px;
+    color:#e7ecee; white-space:nowrap;
+  }
+
+  .progress-track{
+    margin-top:12px; height:8px; position:relative;
+    background:repeating-linear-gradient(90deg, rgba(255,255,255,.35) 0 1px, transparent 1px 9px);
+    border-top:1px solid rgba(255,255,255,.25);
+    border-bottom:1px solid rgba(255,255,255,.25);
+  }
+  .progress-fill{
+    height:100%; width:0%; background:var(--accent);
+    transition:width .35s ease;
+  }
+  .progress-label{
+    margin-top:6px; font-family:'JetBrains Mono',monospace; font-size:10px; color:#b9c3ca;
+    display:flex; justify-content:space-between;
+  }
+
+  main{max-width:640px; margin:0 auto; padding:18px 14px 10px;}
+
+  /* ---------- Blueprint card ---------- */
+  .card{
+    position:relative;
+    background:var(--surface);
+    border:1px solid var(--line-blue-soft);
+    padding:20px 18px 22px;
+    margin-bottom:16px;
+  }
+  .card::before,.card::after{
+    content:""; position:absolute; width:16px; height:16px; pointer-events:none;
+  }
+  .card::before{top:-1px;left:-1px;border-top:3px solid var(--accent);border-left:3px solid var(--accent);}
+  .card::after{bottom:-1px;right:-1px;border-bottom:3px solid var(--accent);border-right:3px solid var(--accent);}
+
+  .card-head{display:flex; align-items:baseline; gap:10px; margin-bottom:16px;}
+  .card-head .num{
+    font-family:'Oswald',sans-serif; font-size:12px; color:#fff; background:var(--line-blue);
+    padding:2px 7px; letter-spacing:.05em;
+  }
+  .card-head h2{
+    font-size:16px; margin:0; font-weight:700;
+  }
+
+  label{
+    display:block; font-size:12.5px; font-weight:600; color:var(--ink-soft);
+    margin-bottom:6px;
+  }
+  .req::after{content:" *"; color:var(--alert);}
+
+  .field{margin-bottom:16px;}
+  .field:last-child{margin-bottom:0;}
+
+  input[type=text], input[type=number], input[type=date], select, textarea{
+    width:100%;
+    font-family:'Noto Sans Bengali',sans-serif;
+    font-size:15px;
+    color:var(--ink);
+    background:#fbfbf9;
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    padding:11px 12px;
+    outline:none;
+    transition:border-color .15s, background .15s;
+  }
+  input:focus, select:focus, textarea:focus{
+    border-color:var(--line-blue); background:#fff;
+  }
+  input.err, textarea.err{border-color:var(--alert); background:#fdf2ef;}
+
+  textarea{
+    resize:vertical; min-height:76px; line-height:1.55;
+    background-image:linear-gradient(rgba(44,95,124,.08) 1px, transparent 1px);
+    background-size:100% 24px;
+  }
+
+  /* material spec grid */
+  .mat-grid{display:grid; grid-template-columns:1fr; gap:12px;}
+  .mat-row{
+    display:grid; grid-template-columns:28px 1fr 92px; gap:10px; align-items:center;
+    border:1px dashed var(--line); padding:10px; background:#fafaf7;
+  }
+  .mat-row .ico{font-size:17px; text-align:center;}
+  .mat-row .qty-wrap{display:flex; flex-direction:column; gap:4px;}
+  .mat-row .qty-wrap span{font-size:11px; color:var(--ink-soft); font-weight:600;}
+  .mat-row input[type=number]{font-family:'JetBrains Mono',monospace; font-weight:600;}
+
+  .row2{display:grid; grid-template-columns:1fr 1fr; gap:12px;}
+
+  /* segmented control */
+  .seg{display:grid; grid-template-columns:repeat(3,1fr); gap:8px;}
+  .seg button{
+    font-family:'Noto Sans Bengali',sans-serif; font-size:13px; font-weight:600;
+    padding:11px 6px; border:1px solid var(--line); background:#fbfbf9; color:var(--ink-soft);
+    cursor:pointer;
+  }
+  .seg button[data-v="good"].active{background:var(--good); border-color:var(--good); color:#fff;}
+  .seg button[data-v="mid"].active{background:var(--mid); border-color:var(--mid); color:#fff;}
+  .seg button[data-v="low"].active{background:var(--alert); border-color:var(--alert); color:#fff;}
+
+  .hint{font-size:11.5px; color:#7c8892; margin-top:6px;}
+
+  /* divider between sections - measurement ticks */
+  .tick-divider{
+    height:14px; margin:0 0 16px;
+    background:repeating-linear-gradient(90deg, var(--line-blue-soft) 0 1px, transparent 1px 12px);
+    background-position:center;
+    opacity:.6;
+  }
+
+  /* submit */
+  .submit-wrap{padding:6px 4px 30px;}
+  #submitBtn{
+    width:100%; padding:16px; font-size:15px; font-weight:700;
+    font-family:'Oswald',sans-serif; letter-spacing:.04em; text-transform:uppercase;
+    background:var(--accent); color:var(--accent-ink); border:none; cursor:pointer;
+    box-shadow:3px 3px 0 var(--ink);
+    transition:transform .1s, box-shadow .1s;
+  }
+  #submitBtn:active{transform:translate(2px,2px); box-shadow:1px 1px 0 var(--ink);}
+  #submitBtn:disabled{opacity:.6; cursor:default;}
+  .status-msg{
+    margin-top:12px; font-size:12.5px; text-align:center; font-family:'JetBrains Mono',monospace;
+  }
+  .status-msg.error{color:var(--alert);}
+  .status-msg.ok{color:var(--good);}
+
+  /* success overlay */
+  #successView{
+    display:none; max-width:640px; margin:60px auto; padding:0 16px; text-align:center;
+  }
+  #successView .stamp{
+    display:inline-block; border:3px solid var(--good); color:var(--good);
+    font-family:'Oswald',sans-serif; font-size:20px; letter-spacing:.08em;
+    padding:14px 22px; transform:rotate(-3deg); text-transform:uppercase;
+  }
+  #successView p{color:var(--ink-soft); font-size:13.5px; margin-top:18px;}
+  #successView .rid{font-family:'JetBrains Mono',monospace; font-size:13px; color:var(--ink); margin-top:6px;}
+  #successView button{
+    margin-top:22px; background:var(--ink); color:#fff; border:none; padding:12px 20px;
+    font-family:'Oswald',sans-serif; letter-spacing:.05em; text-transform:uppercase; font-size:13px;
+    cursor:pointer;
+  }
+
+  #formView.hidden{display:none;}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="head-row">
+    <div class="brand">
+      <div class="mark">🏗️</div>
+      <div>
+        <h1>Daily Site Report</h1>
+        <p>দৈনিক সাইট প্রতিবেদন</p>
+      </div>
+    </div>
+    <div class="date-chip" id="headerDate">—</div>
+  </div>
+  <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+  <div class="progress-label"><span id="progressText">0% পূরণ হয়েছে</span><span id="progressCount">0 / 0</span></div>
+</header>
+
+<main>
+<div id="formView">
+  <form id="reportForm" novalidate>
+
+    <!-- SEC 01 : Project info -->
+    <div class="card">
+      <div class="card-head"><span class="num">SEC.01</span><h2>প্রজেক্ট তথ্য</h2></div>
+      <div class="row2">
+        <div class="field">
+          <label class="req" for="f-date">তারিখ</label>
+          <input type="date" id="f-date" required>
+        </div>
+        <div class="field">
+          <label class="req" for="f-site">সাইট নাম</label>
+          <input type="text" id="f-site" placeholder="যেমন: টঙ্গী" required>
+        </div>
+      </div>
+      <div class="field">
+        <label class="req" for="f-engineer">ইঞ্জিনিয়ারের নাম</label>
+        <input type="text" id="f-engineer" placeholder="আপনার নাম লিখুন" required>
+      </div>
+    </div>
+
+    <div class="tick-divider"></div>
+
+    <!-- SEC 02 : Materials -->
+    <div class="card">
+      <div class="card-head"><span class="num">SEC.02</span><h2>মালামাল ব্যবহার</h2></div>
+      <div class="mat-grid">
+
+        <div class="mat-row">
+          <div class="ico">🧱</div>
+          <div class="qty-wrap"><span>সিমেন্ট</span>
+            <input type="number" min="0" step="any" id="f-cement-qty" placeholder="0">
+          </div>
+          <select id="f-cement-unit">
+            <option value="বস্তা">বস্তা</option>
+            <option value="কেজি">কেজি</option>
+            <option value="টন">টন</option>
+          </select>
+        </div>
+
+        <div class="mat-row">
+          <div class="ico">🔩</div>
+          <div class="qty-wrap"><span>রড / স্টিল</span>
+            <input type="number" min="0" step="any" id="f-rod-qty" placeholder="0">
+          </div>
+          <select id="f-rod-unit">
+            <option value="টন">টন</option>
+            <option value="কেজি">কেজি</option>
+            <option value="পিস">পিস</option>
+          </select>
+        </div>
+
+        <div class="mat-row">
+          <div class="ico">⛱️</div>
+          <div class="qty-wrap"><span>বালি</span>
+            <input type="number" min="0" step="any" id="f-sand-qty" placeholder="0">
+          </div>
+          <select id="f-sand-unit">
+            <option value="বস্তা">বস্তা</option>
+            <option value="ট্রাক">ট্রাক</option>
+            <option value="সিএফটি">সিএফটি</option>
+            <option value="টন">টন</option>
+          </select>
+        </div>
+
+        <div class="mat-row">
+          <div class="ico">🧱</div>
+          <div class="qty-wrap"><span>ইট</span>
+            <input type="number" min="0" step="any" id="f-brick-qty" placeholder="0">
+          </div>
+          <select id="f-brick-unit">
+            <option value="পিস">পিস</option>
+            <option value="হাজার পিস">হাজার পিস</option>
+          </select>
+        </div>
+
+        <div class="mat-row">
+          <div class="ico">🪨</div>
+          <div class="qty-wrap"><span>কংক্রিট</span>
+            <input type="number" min="0" step="any" id="f-concrete-qty" placeholder="0">
+          </div>
+          <select id="f-concrete-unit">
+            <option value="সিএফটি">সিএফটি</option>
+            <option value="ঘনমিটার">ঘনমিটার</option>
+            <option value="ব্যাগ">ব্যাগ</option>
+          </select>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="tick-divider"></div>
+
+    <!-- SEC 03 : Workforce -->
+    <div class="card">
+      <div class="card-head"><span class="num">SEC.03</span><h2>জনবল</h2></div>
+      <div class="field">
+        <label for="f-labor">আজকে মোট শ্রমিক সংখ্যা</label>
+        <input type="number" min="0" step="1" id="f-labor" placeholder="যেমন: 25">
+      </div>
+    </div>
+
+    <div class="tick-divider"></div>
+
+    <!-- SEC 04 : Work progress -->
+    <div class="card">
+      <div class="card-head"><span class="num">SEC.04</span><h2>কাজের অগ্রগতি</h2></div>
+      <div class="field">
+        <label class="req" for="f-work-completed">আজকে যে কাজ সম্পন্ন হয়েছে</label>
+        <textarea id="f-work-completed" placeholder="যেমন: দুই তলা পর্যন্ত ঢালাই সম্পন্ন হয়েছে" required></textarea>
+      </div>
+      <div class="field">
+        <label for="f-work-progress">যে কাজ চলমান আছে</label>
+        <textarea id="f-work-progress" placeholder="বর্তমানে চলমান কাজের বিবরণ"></textarea>
+      </div>
+    </div>
+
+    <div class="tick-divider"></div>
+
+    <!-- SEC 05 : Material status -->
+    <div class="card">
+      <div class="card-head"><span class="num">SEC.05</span><h2>মালামাল পরিস্থিতি</h2></div>
+
+      <div class="field">
+        <label>মালামালের মজুদ অবস্থা</label>
+        <div class="seg" id="stockSeg">
+          <button type="button" data-v="good">পর্যাপ্ত</button>
+          <button type="button" data-v="mid">মাঝারি</button>
+          <button type="button" data-v="low">সংকট</button>
+        </div>
+        <input type="hidden" id="f-stock-status">
+      </div>
+
+      <div class="field">
+        <label for="f-low-stock">কোন মালামাল কম আছে</label>
+        <input type="text" id="f-low-stock" placeholder="যেমন: বালি, সিমেন্ট">
+      </div>
+      <div class="field">
+        <label for="f-nearly-finished">কোন মালামাল প্রায় শেষ</label>
+        <input type="text" id="f-nearly-finished" placeholder="যেমন: বালি">
+      </div>
+      <div class="field">
+        <label for="f-materials-required">কী কী মালামাল প্রয়োজন</label>
+        <textarea id="f-materials-required" placeholder="প্রয়োজনীয় মালামালের তালিকা"></textarea>
+      </div>
+      <div class="field">
+        <label for="f-action-required">কী পদক্ষেপ নেওয়া প্রয়োজন</label>
+        <textarea id="f-action-required" placeholder="যেমন: আগামীকালের মধ্যে বালি সরবরাহ প্রয়োজন"></textarea>
+      </div>
+    </div>
+
+    <div class="tick-divider"></div>
+
+    <!-- SEC 06 : Issues -->
+    <div class="card">
+      <div class="card-head"><span class="num">SEC.06</span><h2>সমস্যা ও মন্তব্য</h2></div>
+      <div class="field">
+        <label for="f-problems">সমস্যা / জটিলতা</label>
+        <textarea id="f-problems" placeholder="আজকে কোনো সমস্যা হয়ে থাকলে লিখুন"></textarea>
+      </div>
+      <div class="field">
+        <label for="f-notes">অতিরিক্ত মন্তব্য</label>
+        <textarea id="f-notes" placeholder="অন্য কোনো তথ্য"></textarea>
+      </div>
+    </div>
+
+    <div class="submit-wrap">
+      <button type="submit" id="submitBtn">রিপোর্ট জমা দিন</button>
+      <div class="status-msg" id="statusMsg"></div>
+    </div>
+
+  </form>
+</div>
+
+<div id="successView">
+  <div class="stamp">✔ জমা হয়েছে</div>
+  <p>আপনার দৈনিক রিপোর্ট সফলভাবে পাঠানো হয়েছে।</p>
+  <div class="rid" id="ridDisplay"></div>
+  <button id="newReportBtn">নতুন রিপোর্ট লিখুন</button>
+</div>
+</main>
+
+<script>
+/* =========================================================
+   CONFIG — এখানে তোমার n8n webhook URL বসাও
+   ========================================================= */
+const WEBHOOK_URL = "https://n8n-scad.srv1492862.hstgr.cloud/webhook-test/b77e09fb-c9ad-4ea9-9ff0-d931d0fbcb4c"; // TEST URL — go-live হওয়ার আগে production URL দিয়ে বদলাতে হবে (নিচের নোট দেখো)
+
+/* ---------- Telegram WebApp init ---------- */
+const tg = window.Telegram ? window.Telegram.WebApp : null;
+if (tg) {
+  tg.ready();
+  tg.expand();
+  try { tg.setHeaderColor('#16232e'); } catch(e){}
+  try { tg.setBackgroundColor('#eceee8'); } catch(e){}
+}
+
+/* ---------- Header date ---------- */
+const today = new Date();
+const isoDate = today.toISOString().slice(0,10);
+document.getElementById('f-date').value = isoDate;
+document.getElementById('headerDate').textContent = today.toLocaleDateString('bn-BD', { day:'2-digit', month:'short', year:'numeric' });
+
+/* auto-fill engineer name from Telegram profile, if available */
+if (tg && tg.initDataUnsafe && tg.initDataUnsafe.user) {
+  const u = tg.initDataUnsafe.user;
+  const name = [u.first_name, u.last_name].filter(Boolean).join(' ');
+  if (name) document.getElementById('f-engineer').placeholder = name;
+}
+
+/* ---------- Segmented control (stock status) ---------- */
+const seg = document.getElementById('stockSeg');
+const stockHidden = document.getElementById('f-stock-status');
+seg.addEventListener('click', (e) => {
+  const btn = e.target.closest('button');
+  if (!btn) return;
+  [...seg.children].forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  const map = { good:'পর্যাপ্ত', mid:'মাঝারি', low:'সংকট' };
+  stockHidden.value = map[btn.dataset.v];
+  updateProgress();
+});
+
+/* ---------- Progress tracker ---------- */
+const form = document.getElementById('reportForm');
+const trackables = () => [...form.querySelectorAll('input, textarea')].filter(el => el.type !== 'hidden');
+function updateProgress(){
+  const els = trackables();
+  const filled = els.filter(el => el.value && el.value.trim() !== '').length + (stockHidden.value ? 1 : 0);
+  const total = els.length + 1;
+  const pct = Math.round((filled/total)*100);
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('progressText').textContent = pct + '% পূরণ হয়েছে';
+  document.getElementById('progressCount').textContent = filled + ' / ' + total;
+}
+form.addEventListener('input', updateProgress);
+updateProgress();
+
+/* ---------- Helpers ---------- */
+function genReportId(){
+  const d = new Date();
+  const pad = n => String(n).padStart(2,'0');
+  const stamp = `${d.getFullYear()}${pad(d.getMonth()+1)}${pad(d.getDate())}-${pad(d.getHours())}${pad(d.getMinutes())}${pad(d.getSeconds())}`;
+  return `REP-${stamp}`;
+}
+function val(id){ return document.getElementById(id).value.trim(); }
+function num(id){ const v = document.getElementById(id).value; return v === '' ? null : Number(v); }
+
+/* ---------- Submit ---------- */
+const submitBtn = document.getElementById('submitBtn');
+const statusMsg = document.getElementById('statusMsg');
+
+form.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  statusMsg.textContent = '';
+  statusMsg.className = 'status-msg';
+
+  // required field validation
+  const required = ['f-date','f-site','f-engineer','f-work-completed'];
+  let firstInvalid = null;
+  required.forEach(id => {
+    const el = document.getElementById(id);
+    if (!el.value || el.value.trim() === '') {
+      el.classList.add('err');
+      if (!firstInvalid) firstInvalid = el;
+    } else {
+      el.classList.remove('err');
+    }
+  });
+  if (firstInvalid) {
+    firstInvalid.scrollIntoView({behavior:'smooth', block:'center'});
+    statusMsg.textContent = 'দয়া করে চিহ্নিত (*) ঘরগুলো পূরণ করুন';
+    statusMsg.className = 'status-msg error';
+    if (tg) tg.HapticFeedback && tg.HapticFeedback.notificationOccurred('error');
+    return;
+  }
+
+  const payload = {
+    report_id: genReportId(),
+    date: val('f-date'),
+    site_name: val('f-site'),
+    engineer_name: val('f-engineer'),
+    cement_used: num('f-cement-qty'),
+    cement_unit: val('f-cement-unit') ? document.getElementById('f-cement-unit').value : null,
+    rod_steel_used: num('f-rod-qty'),
+    rod_steel_unit: document.getElementById('f-rod-unit').value,
+    sand_used: num('f-sand-qty'),
+    sand_unit: document.getElementById('f-sand-unit').value,
+    brick_used: num('f-brick-qty'),
+    brick_unit: document.getElementById('f-brick-unit').value,
+    concrete_used: num('f-concrete-qty'),
+    concrete_unit: document.getElementById('f-concrete-unit').value,
+    labor_count: num('f-labor'),
+    work_completed: val('f-work-completed'),
+    work_in_progress: val('f-work-progress') || null,
+    material_stock_status: stockHidden.value || null,
+    low_stock_materials: val('f-low-stock') || null,
+    materials_nearby_finished: val('f-nearly-finished') || null,
+    materials_required: val('f-materials-required') || null,
+    action_required: val('f-action-required') || null,
+    problems_or_issue: val('f-problems') || null,
+    additional_notes: val('f-notes') || null,
+    submitted_at: new Date().toISOString(),
+    telegram_user_id: (tg && tg.initDataUnsafe && tg.initDataUnsafe.user) ? tg.initDataUnsafe.user.id : null,
+    telegram_username: (tg && tg.initDataUnsafe && tg.initDataUnsafe.user) ? tg.initDataUnsafe.user.username : null
+  };
+
+  submitBtn.disabled = true;
+  submitBtn.textContent = 'পাঠানো হচ্ছে...';
+
+  try {
+    const res = await fetch(WEBHOOK_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+    if (!res.ok) throw new Error('Server error: ' + res.status);
+
+    if (tg) tg.HapticFeedback && tg.HapticFeedback.notificationOccurred('success');
+    document.getElementById('ridDisplay').textContent = payload.report_id;
+    document.getElementById('formView').classList.add('hidden');
+    document.getElementById('successView').style.display = 'block';
+
+  } catch (err) {
+    statusMsg.textContent = 'পাঠাতে সমস্যা হয়েছে। আবার চেষ্টা করুন। (' + err.message + ')';
+    statusMsg.className = 'status-msg error';
+    if (tg) tg.HapticFeedback && tg.HapticFeedback.notificationOccurred('error');
+  } finally {
+    submitBtn.disabled = false;
+    submitBtn.textContent = 'রিপোর্ট জমা দিন';
+  }
+});
+
+document.getElementById('newReportBtn').addEventListener('click', () => {
+  form.reset();
+  document.getElementById('f-date').value = isoDate;
+  [...seg.children].forEach(b => b.classList.remove('active'));
+  stockHidden.value = '';
+  document.getElementById('successView').style.display = 'none';
+  document.getElementById('formView').classList.remove('hidden');
+  updateProgress();
+  window.scrollTo(0,0);
+});
+</script>
+</body>
+</html>
