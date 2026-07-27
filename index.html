@@ -1,584 +1,2028 @@
 <!DOCTYPE html>
 <html lang="bn">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>সাইট রিপোর্ট</title>
-<script src="https://telegram.org/js/telegram-web-app.js"></script>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Noto+Sans+Bengali:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
-<style>
-  :root{
-    --ink:#16232e;
-    --ink-soft:#3c4b58;
-    --paper:#eceee8;
-    --surface:#ffffff;
-    --line:#c9d2d1;
-    --line-blue:#2c5f7c;
-    --line-blue-soft:#c3d3da;
-    --accent:#f2a900;
-    --accent-ink:#5c3d00;
-    --alert:#b23a22;
-    --good:#2f7d5a;
-    --mid:#c98a12;
-    --radius:2px;
-  }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>সাইট ম্যানেজমেন্ট সিস্টেম | Telegram Web App</title>
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Noto+Sans+Bengali:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600&display=swap"
+    rel="stylesheet">
+  <style>
+    :root {
+      --ink: #16232e;
+      --ink-soft: #3c4b58;
+      --paper: #eceee8;
+      --surface: #ffffff;
+      --line: #c9d2d1;
+      --line-blue: #2c5f7c;
+      --line-blue-soft: #c3d3da;
+      --accent: #f2a900;
+      --accent-ink: #5c3d00;
+      --alert: #b23a22;
+      --alert-soft: #fdf2ef;
+      --good: #2f7d5a;
+      --good-soft: #eef7f2;
+      --mid: #c98a12;
+      --mid-soft: #fdf6e8;
+      --radius: 2px;
+    }
 
-  *{box-sizing:border-box;}
-  html,body{margin:0;padding:0;}
-  body{
-    background:var(--paper);
-    background-image:
-      linear-gradient(var(--line) 1px, transparent 1px),
-      linear-gradient(90deg, var(--line) 1px, transparent 1px);
-    background-size:26px 26px;
-    background-attachment:fixed;
-    color:var(--ink);
-    font-family:'Noto Sans Bengali','Inter',sans-serif;
-    -webkit-tap-highlight-color:transparent;
-    padding-bottom:60px;
-  }
+    * {
+      box-sizing: border-box;
+    }
 
-  .eyebrow{
-    font-family:'Oswald',sans-serif;
-    letter-spacing:.14em;
-    text-transform:uppercase;
-    font-size:11px;
-    color:var(--line-blue);
-    font-weight:600;
-  }
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+    }
 
-  /* ---------- Header / stamp ---------- */
-  header{
-    position:sticky; top:0; z-index:50;
-    background:var(--ink);
-    color:#fff;
-    padding:16px 18px 14px;
-    box-shadow:0 2px 10px rgba(0,0,0,.15);
-  }
-  .head-row{display:flex; align-items:center; justify-content:space-between; gap:12px;}
-  .brand{display:flex; align-items:center; gap:10px;}
-  .brand .mark{
-    width:34px;height:34px;border:2px solid var(--accent);
-    display:flex;align-items:center;justify-content:center;
-    font-size:17px; flex:none;
-  }
-  .brand h1{
-    font-family:'Oswald',sans-serif;
-    font-size:16px; letter-spacing:.05em; margin:0; text-transform:uppercase;
-  }
-  .brand p{margin:1px 0 0; font-size:11px; color:#b9c3ca; font-family:'JetBrains Mono',monospace;}
-  .date-chip{
-    font-family:'JetBrains Mono',monospace; font-size:11px;
-    border:1px solid rgba(255,255,255,.25); padding:5px 8px;
-    color:#e7ecee; white-space:nowrap;
-  }
+    body {
+      background: var(--paper);
+      background-image: linear-gradient(var(--line) 1px, transparent 1px), linear-gradient(90deg, var(--line) 1px, transparent 1px);
+      background-size: 26px 26px;
+      background-attachment: fixed;
+      color: var(--ink);
+      font-family: 'Noto Sans Bengali', 'Inter', sans-serif;
+      -webkit-tap-highlight-color: transparent;
+      padding-bottom: 78px;
+    }
 
-  .progress-track{
-    margin-top:12px; height:8px; position:relative;
-    background:repeating-linear-gradient(90deg, rgba(255,255,255,.35) 0 1px, transparent 1px 9px);
-    border-top:1px solid rgba(255,255,255,.25);
-    border-bottom:1px solid rgba(255,255,255,.25);
-  }
-  .progress-fill{
-    height:100%; width:0%; background:var(--accent);
-    transition:width .35s ease;
-  }
-  .progress-label{
-    margin-top:6px; font-family:'JetBrains Mono',monospace; font-size:10px; color:#b9c3ca;
-    display:flex; justify-content:space-between;
-  }
+    .eyebrow {
+      font-family: 'Oswald', sans-serif;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      font-size: 11px;
+      color: var(--line-blue);
+      font-weight: 600;
+    }
 
-  main{max-width:640px; margin:0 auto; padding:18px 14px 10px;}
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: var(--ink);
+      color: #fff;
+      padding: 14px 18px 12px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, .15);
+    }
 
-  /* ---------- Blueprint card ---------- */
-  .card{
-    position:relative;
-    background:var(--surface);
-    border:1px solid var(--line-blue-soft);
-    padding:20px 18px 22px;
-    margin-bottom:16px;
-  }
-  .card::before,.card::after{
-    content:""; position:absolute; width:16px; height:16px; pointer-events:none;
-  }
-  .card::before{top:-1px;left:-1px;border-top:3px solid var(--accent);border-left:3px solid var(--accent);}
-  .card::after{bottom:-1px;right:-1px;border-bottom:3px solid var(--accent);border-right:3px solid var(--accent);}
+    .head-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
 
-  .card-head{display:flex; align-items:baseline; gap:10px; margin-bottom:16px;}
-  .card-head .num{
-    font-family:'Oswald',sans-serif; font-size:12px; color:#fff; background:var(--line-blue);
-    padding:2px 7px; letter-spacing:.05em;
-  }
-  .card-head h2{
-    font-size:16px; margin:0; font-weight:700;
-  }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
 
-  label{
-    display:block; font-size:12.5px; font-weight:600; color:var(--ink-soft);
-    margin-bottom:6px;
-  }
-  .req::after{content:" *"; color:var(--alert);}
+    .brand .mark {
+      width: 32px;
+      height: 32px;
+      border: 2px solid var(--accent);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      flex: none;
+    }
 
-  .field{margin-bottom:16px;}
-  .field:last-child{margin-bottom:0;}
+    .brand h1 {
+      font-family: 'Oswald', sans-serif;
+      font-size: 15px;
+      letter-spacing: .05em;
+      margin: 0;
+      text-transform: uppercase;
+    }
 
-  input[type=text], input[type=number], input[type=date], select, textarea{
-    width:100%;
-    font-family:'Noto Sans Bengali',sans-serif;
-    font-size:15px;
-    color:var(--ink);
-    background:#fbfbf9;
-    border:1px solid var(--line);
-    border-radius:var(--radius);
-    padding:11px 12px;
-    outline:none;
-    transition:border-color .15s, background .15s;
-  }
-  input:focus, select:focus, textarea:focus{
-    border-color:var(--line-blue); background:#fff;
-  }
-  input.err, textarea.err{border-color:var(--alert); background:#fdf2ef;}
+    .brand p {
+      margin: 1px 0 0;
+      font-size: 10.5px;
+      color: #b9c3ca;
+      font-family: 'JetBrains Mono', monospace;
+    }
 
-  textarea{
-    resize:vertical; min-height:76px; line-height:1.55;
-    background-image:linear-gradient(rgba(44,95,124,.08) 1px, transparent 1px);
-    background-size:100% 24px;
-  }
+    .date-chip {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10.5px;
+      border: 1px solid rgba(255, 255, 255, .25);
+      padding: 5px 8px;
+      color: #e7ecee;
+      white-space: nowrap;
+    }
 
-  /* material spec grid */
-  .mat-grid{display:grid; grid-template-columns:1fr; gap:12px;}
-  .mat-row{
-    display:grid; grid-template-columns:28px 1fr 92px; gap:10px; align-items:center;
-    border:1px dashed var(--line); padding:10px; background:#fafaf7;
-  }
-  .mat-row .ico{font-size:17px; text-align:center;}
-  .mat-row .qty-wrap{display:flex; flex-direction:column; gap:4px;}
-  .mat-row .qty-wrap span{font-size:11px; color:var(--ink-soft); font-weight:600;}
-  .mat-row input[type=number]{font-family:'JetBrains Mono',monospace; font-weight:600;}
+    main {
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 16px 14px 10px;
+    }
 
-  .row2{display:grid; grid-template-columns:1fr 1fr; gap:12px;}
+    .view {
+      display: none;
+    }
 
-  /* segmented control */
-  .seg{display:grid; grid-template-columns:repeat(3,1fr); gap:8px;}
-  .seg button{
-    font-family:'Noto Sans Bengali',sans-serif; font-size:13px; font-weight:600;
-    padding:11px 6px; border:1px solid var(--line); background:#fbfbf9; color:var(--ink-soft);
-    cursor:pointer;
-  }
-  .seg button[data-v="good"].active{background:var(--good); border-color:var(--good); color:#fff;}
-  .seg button[data-v="mid"].active{background:var(--mid); border-color:var(--mid); color:#fff;}
-  .seg button[data-v="low"].active{background:var(--alert); border-color:var(--alert); color:#fff;}
+    .view.active {
+      display: block;
+    }
 
-  .hint{font-size:11.5px; color:#7c8892; margin-top:6px;}
+    .card {
+      position: relative;
+      background: var(--surface);
+      border: 1px solid var(--line-blue-soft);
+      padding: 18px 16px 20px;
+      margin-bottom: 14px;
+    }
 
-  /* divider between sections - measurement ticks */
-  .tick-divider{
-    height:14px; margin:0 0 16px;
-    background:repeating-linear-gradient(90deg, var(--line-blue-soft) 0 1px, transparent 1px 12px);
-    background-position:center;
-    opacity:.6;
-  }
+    .card::before,
+    .card::after {
+      content: "";
+      position: absolute;
+      width: 14px;
+      height: 14px;
+      pointer-events: none;
+    }
 
-  /* submit */
-  .submit-wrap{padding:6px 4px 30px;}
-  #submitBtn{
-    width:100%; padding:16px; font-size:15px; font-weight:700;
-    font-family:'Oswald',sans-serif; letter-spacing:.04em; text-transform:uppercase;
-    background:var(--accent); color:var(--accent-ink); border:none; cursor:pointer;
-    box-shadow:3px 3px 0 var(--ink);
-    transition:transform .1s, box-shadow .1s;
-  }
-  #submitBtn:active{transform:translate(2px,2px); box-shadow:1px 1px 0 var(--ink);}
-  #submitBtn:disabled{opacity:.6; cursor:default;}
-  .status-msg{
-    margin-top:12px; font-size:12.5px; text-align:center; font-family:'JetBrains Mono',monospace;
-  }
-  .status-msg.error{color:var(--alert);}
-  .status-msg.ok{color:var(--good);}
+    .card::before {
+      top: -1px;
+      left: -1px;
+      border-top: 3px solid var(--accent);
+      border-left: 3px solid var(--accent);
+    }
 
-  /* success overlay */
-  #successView{
-    display:none; max-width:640px; margin:60px auto; padding:0 16px; text-align:center;
-  }
-  #successView .stamp{
-    display:inline-block; border:3px solid var(--good); color:var(--good);
-    font-family:'Oswald',sans-serif; font-size:20px; letter-spacing:.08em;
-    padding:14px 22px; transform:rotate(-3deg); text-transform:uppercase;
-  }
-  #successView p{color:var(--ink-soft); font-size:13.5px; margin-top:18px;}
-  #successView .rid{font-family:'JetBrains Mono',monospace; font-size:13px; color:var(--ink); margin-top:6px;}
-  #successView button{
-    margin-top:22px; background:var(--ink); color:#fff; border:none; padding:12px 20px;
-    font-family:'Oswald',sans-serif; letter-spacing:.05em; text-transform:uppercase; font-size:13px;
-    cursor:pointer;
-  }
+    .card::after {
+      bottom: -1px;
+      right: -1px;
+      border-bottom: 3px solid var(--accent);
+      border-right: 3px solid var(--accent);
+    }
 
-  #formView.hidden{display:none;}
-</style>
+    .card-head {
+      display: flex;
+      align-items: baseline;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    .card-head .num {
+      font-family: 'Oswald', sans-serif;
+      font-size: 11px;
+      color: #fff;
+      background: var(--line-blue);
+      padding: 2px 7px;
+      letter-spacing: .05em;
+    }
+
+    .card-head h2 {
+      font-size: 15px;
+      margin: 0;
+      font-weight: 700;
+      flex: 1;
+    }
+
+    .card-head .sub {
+      font-size: 10.5px;
+      color: #8b98a1;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    label {
+      display: block;
+      font-size: 12.5px;
+      font-weight: 600;
+      color: var(--ink-soft);
+      margin-bottom: 6px;
+    }
+
+    .req::after {
+      content: " *";
+      color: var(--alert);
+    }
+
+    .field {
+      margin-bottom: 14px;
+    }
+
+    .field:last-child {
+      margin-bottom: 0;
+    }
+
+    input[type=text],
+    input[type=number],
+    input[type=date],
+    input[type=email],
+    input[type=url],
+    select,
+    textarea {
+      width: 100%;
+      font-family: 'Noto Sans Bengali', sans-serif;
+      font-size: 14.5px;
+      color: var(--ink);
+      background: #fbfbf9;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 10px 11px;
+      outline: none;
+      transition: border-color .15s, background .15s;
+    }
+
+    input:focus,
+    select:focus,
+    textarea:focus {
+      border-color: var(--line-blue);
+      background: #fff;
+    }
+
+    input.err,
+    textarea.err {
+      border-color: var(--alert);
+      background: var(--alert-soft);
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 70px;
+      line-height: 1.55;
+    }
+
+    .row2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .mat-row {
+      display: grid;
+      grid-template-columns: 26px 1fr 88px;
+      gap: 8px;
+      align-items: center;
+      border: 1px dashed var(--line);
+      padding: 9px;
+      background: #fafaf7;
+      margin-bottom: 10px;
+    }
+
+    .mat-row .ico {
+      font-size: 16px;
+      text-align: center;
+    }
+
+    .mat-row .qty-wrap {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+
+    .mat-row .qty-wrap span {
+      font-size: 10.5px;
+      color: var(--ink-soft);
+      font-weight: 600;
+    }
+
+    .mat-row input[type=number] {
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 600;
+    }
+
+    .seg {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 7px;
+    }
+
+    .seg button {
+      font-family: 'Noto Sans Bengali', sans-serif;
+      font-size: 12.5px;
+      font-weight: 600;
+      padding: 10px 6px;
+      border: 1px solid var(--line);
+      background: #fbfbf9;
+      color: var(--ink-soft);
+      cursor: pointer;
+    }
+
+    .seg button[data-v="good"].active {
+      background: var(--good);
+      border-color: var(--good);
+      color: #fff;
+    }
+
+    .seg button[data-v="mid"].active {
+      background: var(--mid);
+      border-color: var(--mid);
+      color: #fff;
+    }
+
+    .seg button[data-v="low"].active {
+      background: var(--alert);
+      border-color: var(--alert);
+      color: #fff;
+    }
+
+    .tick-divider {
+      height: 12px;
+      margin: 0 0 14px;
+      background: repeating-linear-gradient(90deg, var(--line-blue-soft) 0 1px, transparent 1px 12px);
+      background-position: center;
+      opacity: .6;
+    }
+
+    .btn {
+      width: 100%;
+      padding: 14px;
+      font-size: 14px;
+      font-weight: 700;
+      font-family: 'Oswald', sans-serif;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+      background: var(--accent);
+      color: var(--accent-ink);
+      border: none;
+      cursor: pointer;
+      box-shadow: 3px 3px 0 var(--ink);
+      transition: transform .1s, box-shadow .1s;
+    }
+
+    .btn:active {
+      transform: translate(2px, 2px);
+      box-shadow: 1px 1px 0 var(--ink);
+    }
+
+    .btn:disabled {
+      opacity: .6;
+      cursor: default;
+    }
+
+    .btn.ghost {
+      background: #fff;
+      color: var(--ink);
+      border: 1px solid var(--line-blue);
+      box-shadow: none;
+    }
+
+    .btn.small {
+      width: auto;
+      padding: 9px 14px;
+      font-size: 12px;
+      box-shadow: 2px 2px 0 var(--ink);
+    }
+
+    .btn.small:active {
+      box-shadow: 1px 1px 0 var(--ink);
+    }
+
+    .btn.danger {
+      background: var(--alert);
+      color: #fff;
+    }
+
+    .status-msg {
+      margin-top: 10px;
+      font-size: 12px;
+      text-align: center;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .status-msg.error {
+      color: var(--alert);
+    }
+
+    .status-msg.ok {
+      color: var(--good);
+    }
+
+    #successView {
+      display: none;
+      max-width: 680px;
+      margin: 60px auto;
+      padding: 0 16px;
+      text-align: center;
+    }
+
+    #successView .stamp {
+      display: inline-block;
+      border: 3px solid var(--good);
+      color: var(--good);
+      font-family: 'Oswald', sans-serif;
+      font-size: 18px;
+      letter-spacing: .08em;
+      padding: 12px 20px;
+      transform: rotate(-3deg);
+      text-transform: uppercase;
+    }
+
+    #successView p {
+      color: var(--ink-soft);
+      font-size: 13px;
+      margin-top: 16px;
+    }
+
+    .rid {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      color: var(--ink-soft);
+      margin-top: 8px;
+    }
+
+    /* ---- Dashboard ---- */
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    .kpi {
+      background: var(--surface);
+      border: 1px solid var(--line-blue-soft);
+      padding: 12px;
+      text-align: center;
+    }
+
+    .kpi .v {
+      font-family: 'Oswald', sans-serif;
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--ink);
+    }
+
+    .kpi .l {
+      font-size: 10.5px;
+      color: var(--ink-soft);
+      margin-top: 2px;
+      font-weight: 600;
+    }
+
+    .kpi.ok .v {
+      color: var(--good);
+    }
+
+    .kpi.warn .v {
+      color: var(--alert);
+    }
+
+    .cta-fill {
+      background: var(--ink);
+      color: #fff;
+      border: none;
+      padding: 16px;
+      width: 100%;
+      font-family: 'Oswald', sans-serif;
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: .03em;
+      text-transform: uppercase;
+      cursor: pointer;
+      margin-bottom: 14px;
+      box-shadow: 3px 3px 0 var(--accent);
+    }
+
+    .cta-fill:active {
+      transform: translate(2px, 2px);
+      box-shadow: 1px 1px 0 var(--accent);
+    }
+
+    .prog-item {
+      margin-bottom: 14px;
+    }
+
+    .prog-item:last-child {
+      margin-bottom: 0;
+    }
+
+    .prog-head {
+      display: flex;
+      justify-content: space-between;
+      font-size: 12.5px;
+      font-weight: 600;
+      margin-bottom: 5px;
+    }
+
+    .prog-head .pct {
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .prog-track {
+      height: 10px;
+      background: #eceee8;
+      border: 1px solid var(--line);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .prog-fill {
+      height: 100%;
+      transition: width .4s ease;
+    }
+
+    .prog-fill.ok {
+      background: var(--good);
+    }
+
+    .prog-fill.mid {
+      background: var(--mid);
+    }
+
+    .prog-fill.over {
+      background: var(--alert);
+    }
+
+    .prog-nums {
+      font-size: 10.5px;
+      color: var(--ink-soft);
+      font-family: 'JetBrains Mono', monospace;
+      margin-top: 3px;
+    }
+
+    canvas {
+      max-width: 100%;
+    }
+
+    .phase-list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    .phase-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 9px 0;
+      border-bottom: 1px dashed var(--line);
+    }
+
+    .phase-item:last-child {
+      border-bottom: none;
+    }
+
+    .phase-dot {
+      width: 11px;
+      height: 11px;
+      border-radius: 50%;
+      flex: none;
+      border: 2px solid var(--line-blue);
+    }
+
+    .phase-dot.done {
+      background: var(--good);
+      border-color: var(--good);
+    }
+
+    .phase-dot.progress {
+      background: var(--accent);
+      border-color: var(--accent);
+    }
+
+    .phase-dot.pending {
+      background: #fff;
+    }
+
+    .phase-info {
+      flex: 1;
+    }
+
+    .phase-name {
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .phase-date {
+      font-size: 10.5px;
+      color: var(--ink-soft);
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .phase-badge {
+      font-size: 9.5px;
+      font-weight: 700;
+      padding: 2px 6px;
+      text-transform: uppercase;
+      font-family: 'Oswald', sans-serif;
+    }
+
+    .phase-badge.ahead {
+      background: var(--good-soft);
+      color: var(--good);
+    }
+
+    .phase-badge.behind {
+      background: var(--alert-soft);
+      color: var(--alert);
+    }
+
+    .phase-badge.ontrack {
+      background: var(--mid-soft);
+      color: var(--mid);
+    }
+
+    .alert-row {
+      display: flex;
+      gap: 10px;
+      padding: 10px;
+      background: var(--alert-soft);
+      border-left: 3px solid var(--alert);
+      margin-bottom: 8px;
+      font-size: 12.5px;
+    }
+
+    .alert-row:last-child {
+      margin-bottom: 0;
+    }
+
+    .alert-row .d {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10.5px;
+      color: var(--alert);
+      font-weight: 700;
+      flex: none;
+    }
+
+    .empty-note {
+      font-size: 12.5px;
+      color: #8b98a1;
+      text-align: center;
+      padding: 16px 0;
+    }
+
+    table.rep-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12px;
+    }
+
+    table.rep-table th {
+      text-align: left;
+      font-size: 10.5px;
+      text-transform: uppercase;
+      letter-spacing: .03em;
+      color: var(--ink-soft);
+      border-bottom: 2px solid var(--ink);
+      padding: 6px 4px;
+      font-family: 'Oswald', sans-serif;
+    }
+
+    table.rep-table td {
+      padding: 8px 4px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    table.rep-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .link-more {
+      display: block;
+      text-align: center;
+      font-size: 12px;
+      color: var(--line-blue);
+      font-weight: 600;
+      margin-top: 10px;
+      cursor: pointer;
+      text-decoration: underline;
+    }
+
+    /* Dynamic Custom Field Item */
+    .custom-field-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #fafaf7;
+      border: 1px solid var(--line);
+      padding: 8px 12px;
+      margin-bottom: 8px;
+    }
+
+    .custom-field-item span.tag {
+      font-size: 10px;
+      font-family: 'JetBrains Mono', monospace;
+      background: var(--line-blue-soft);
+      padding: 2px 6px;
+      border-radius: 2px;
+    }
+
+    /* ---- Estimation phase builder ---- */
+    .phase-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr 32px;
+      gap: 8px;
+      margin-bottom: 8px;
+      align-items: center;
+    }
+
+    .phase-row .rm {
+      background: none;
+      border: 1px solid var(--alert);
+      color: var(--alert);
+      width: 32px;
+      height: 38px;
+      cursor: pointer;
+      font-weight: 700;
+    }
+
+    /* ---- History filters ---- */
+    .filter-row {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .filter-row input {
+      flex: 1;
+    }
+
+    .hist-item {
+      border: 1px solid var(--line);
+      margin-bottom: 8px;
+      background: #fafaf7;
+    }
+
+    .hist-head {
+      display: flex;
+      justify-content: space-between;
+      padding: 10px 12px;
+      cursor: pointer;
+      align-items: center;
+    }
+
+    .hist-head .hd-date {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11.5px;
+      font-weight: 700;
+      color: var(--line-blue);
+    }
+
+    .hist-head .hd-snip {
+      font-size: 12px;
+      color: var(--ink-soft);
+      flex: 1;
+      margin: 0 10px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .hist-body {
+      display: none;
+      padding: 0 12px 12px;
+      font-size: 12.5px;
+      line-height: 1.6;
+      border-top: 1px dashed var(--line);
+    }
+
+    .hist-body.open {
+      display: block;
+    }
+
+    .hist-body .kv {
+      margin: 6px 0;
+    }
+
+    .hist-body .kv b {
+      color: var(--ink-soft);
+      font-weight: 600;
+    }
+
+    /* ---- bottom nav ---- */
+    .tabbar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      z-index: 60;
+      background: var(--ink);
+      display: flex;
+      box-shadow: 0 -2px 10px rgba(0, 0, 0, .2);
+    }
+
+    .tabbar button {
+      flex: 1;
+      background: none;
+      border: none;
+      color: #8b98a1;
+      padding: 10px 2px 8px;
+      font-family: 'Noto Sans Bengali', sans-serif;
+      font-size: 10.5px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 3px;
+    }
+
+    .tabbar button .ic {
+      font-size: 17px;
+    }
+
+    .tabbar button.active {
+      color: var(--accent);
+    }
+
+    .tabbar button.active .ic {
+      transform: translateY(-1px);
+    }
+
+    .saved-chip {
+      display: inline-block;
+      font-size: 10.5px;
+      font-family: 'JetBrains Mono', monospace;
+      color: var(--good);
+      background: var(--good-soft);
+      padding: 3px 8px;
+      margin-left: 6px;
+    }
+
+    .loading-row {
+      text-align: center;
+      padding: 20px 0;
+      color: #8b98a1;
+      font-size: 12.5px;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    /* Code box */
+    .code-block {
+      background: #16232e;
+      color: #a5f3fc;
+      padding: 10px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      overflow-x: auto;
+      border-radius: 2px;
+      margin: 8px 0;
+    }
+  </style>
 </head>
+
 <body>
 
-<header>
-  <div class="head-row">
-    <div class="brand">
-      <div class="mark">🏗️</div>
-      <div>
-        <h1>Daily Site Report</h1>
-        <p>দৈনিক সাইট প্রতিবেদন</p>
+  <header>
+    <div class="head-row">
+      <div class="brand">
+        <div class="mark">📐</div>
+        <div>
+          <h1 id="hdrCompany">সাইট ম্যানেজমেন্ট</h1>
+          <p id="hdrSite">Telegram Voice & WebApp System</p>
+        </div>
       </div>
+      <div class="date-chip" id="headerDate">--</div>
     </div>
-    <div class="date-chip" id="headerDate">—</div>
+  </header>
+
+  <main>
+
+    <!-- ============ DASHBOARD ============ -->
+    <section class="view active" id="view-dashboard">
+      <button class="cta-fill" onclick="goTab('report')">📝 আজকের রিপোর্ট দিন</button>
+
+      <div class="kpi-grid">
+        <div class="kpi" id="kpiToday">
+          <div class="v">--</div>
+          <div class="l">আজকের রিপোর্ট</div>
+        </div>
+        <div class="kpi" id="kpiPhase">
+          <div class="v">--</div>
+          <div class="l">বর্তমান ধাপ</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-head"><span class="num">০১</span>
+          <h2>মালামাল অগ্রগতি (ব্যবহৃত vs এস্টিমেশন)</h2>
+        </div>
+        <div id="materialProgress">
+          <div class="loading-row">লোড হচ্ছে...</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-head"><span class="num">০২</span>
+          <h2>ব্যবহৃত বনাম পরিকল্পিত</h2>
+        </div>
+        <canvas id="usageChart" height="200"></canvas>
+      </div>
+
+      <div class="card">
+        <div class="card-head"><span class="num">০৩</span>
+          <h2>ধাপ অনুযায়ী অগ্রগতি</h2>
+        </div>
+        <ul class="phase-list" id="phaseList">
+          <li class="empty-note">এস্টিমেশন রিপোর্ট এখনো দেওয়া হয়নি</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <div class="card-head"><span class="num">০৪</span>
+          <h2>সতর্কতা ও স্টক আপডেট</h2><span class="sub" id="alertCount"></span>
+        </div>
+        <div id="alertList">
+          <div class="empty-note">কোনো সতর্কতা নেই</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-head"><span class="num">০৫</span>
+          <h2>সাম্প্রতিক রিপোর্ট (Telegram Voice / Form)</h2>
+        </div>
+        <table class="rep-table" id="recentTable">
+          <thead>
+            <tr>
+              <th>তারিখ</th>
+              <th>কাজ</th>
+              <th>মালামাল</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td colspan="3" class="empty-note">লোড হচ্ছে...</td>
+            </tr>
+          </tbody>
+        </table>
+        <span class="link-more" onclick="goTab('history')">সব দেখুন →</span>
+      </div>
+    </section>
+
+    <!-- ============ DAILY REPORT ============ -->
+    <section class="view" id="view-report">
+      <form id="reportForm">
+        <div class="card">
+          <div class="card-head"><span class="num">SEC.01</span>
+            <h2>মূল তথ্য</h2>
+          </div>
+          <div class="field"><label class="req" for="f-date">তারিখ</label><input type="date" id="f-date" required></div>
+          <div class="field"><label class="req" for="f-site">সাইটের নাম</label><input type="text" id="f-site" required>
+          </div>
+          <div class="field"><label class="req" for="f-engineer">ইঞ্জিনিয়ারের নাম</label><input type="text"
+              id="f-engineer" required></div>
+        </div>
+
+        <div class="tick-divider"></div>
+
+        <div class="card">
+          <div class="card-head"><span class="num">SEC.02</span>
+            <h2>মালামাল ব্যবহার</h2>
+          </div>
+          <div class="mat-row">
+            <div class="ico">🧱</div>
+            <div class="qty-wrap"><span>সিমেন্ট</span><input type="number" id="f-cement-qty" step="any"></div><select
+              id="f-cement-unit">
+              <option value="বস্তা">বস্তা</option>
+              <option value="কেজি">কেজি</option>
+              <option value="টন">টন</option>
+            </select>
+          </div>
+          <div class="mat-row">
+            <div class="ico">🔩</div>
+            <div class="qty-wrap"><span>রড/স্টিল</span><input type="number" id="f-rod-qty" step="any"></div><select
+              id="f-rod-unit">
+              <option value="টন">টন</option>
+              <option value="কেজি">কেজি</option>
+              <option value="পিস">পিস</option>
+            </select>
+          </div>
+          <div class="mat-row">
+            <div class="ico">⛱️</div>
+            <div class="qty-wrap"><span>বালি</span><input type="number" id="f-sand-qty" step="any"></div><select
+              id="f-sand-unit">
+              <option value="ট্রাক">ট্রাক</option>
+              <option value="বস্তা">বস্তা</option>
+              <option value="সিএফটি">সিএফটি</option>
+              <option value="টন">টন</option>
+            </select>
+          </div>
+          <div class="mat-row">
+            <div class="ico">🧊</div>
+            <div class="qty-wrap"><span>ইট</span><input type="number" id="f-brick-qty" step="any"></div><select
+              id="f-brick-unit">
+              <option value="পিস">পিস</option>
+              <option value="হাজার পিস">হাজার পিস</option>
+            </select>
+          </div>
+          <div class="mat-row">
+            <div class="ico">🪨</div>
+            <div class="qty-wrap"><span>কংক্রিট</span><input type="number" id="f-concrete-qty" step="any"></div><select
+              id="f-concrete-unit">
+              <option value="সিএফটি">সিএফটি</option>
+              <option value="ঘনমিটার">ঘনমিটার</option>
+              <option value="ব্যাগ">ব্যাগ</option>
+            </select>
+          </div>
+          <div class="field"><label for="f-labor">শ্রমিক সংখ্যা</label><input type="number" id="f-labor"></div>
+        </div>
+
+        <div class="tick-divider"></div>
+
+        <div class="card">
+          <div class="card-head"><span class="num">SEC.03</span>
+            <h2>কাজের অগ্রগতি</h2>
+          </div>
+          <div class="field"><label class="req" for="f-work-completed">আজ কী কাজ সম্পন্ন হয়েছে</label><textarea
+              id="f-work-completed" required placeholder="যেমন: ৩য় তলার কলাম ঢালাই সম্পন্ন"></textarea></div>
+          <div class="field"><label for="f-work-progress">চলমান কাজ</label><textarea id="f-work-progress"></textarea>
+          </div>
+        </div>
+
+        <div class="tick-divider"></div>
+
+        <div class="card">
+          <div class="card-head"><span class="num">SEC.04</span>
+            <h2>মালামাল স্টক অবস্থা</h2>
+          </div>
+          <div class="field"><label>স্টক অবস্থা</label>
+            <div class="seg" id="stockSeg">
+              <button type="button" data-v="good">পর্যাপ্ত</button>
+              <button type="button" data-v="mid">মাঝারি</button>
+              <button type="button" data-v="low">সংকট</button>
+            </div>
+            <input type="hidden" id="f-stock-status">
+          </div>
+          <div class="field"><label for="f-low-stock">কোন মালামাল কম আছে</label><input type="text" id="f-low-stock">
+          </div>
+          <div class="field"><label for="f-nearly-finished">কোন মালামাল প্রায় শেষ</label><input type="text"
+              id="f-nearly-finished"></div>
+          <div class="field"><label for="f-materials-required">কী কী মালামাল প্রয়োজন</label><textarea
+              id="f-materials-required"></textarea></div>
+          <div class="field"><label for="f-action-required">কী পদক্ষেপ নেওয়া প্রয়োজন</label><textarea
+              id="f-action-required"></textarea></div>
+        </div>
+
+        <div class="tick-divider"></div>
+
+        <div class="card">
+          <div class="card-head"><span class="num">SEC.05</span>
+            <h2>সমস্যা ও মন্তব্য</h2>
+          </div>
+          <div class="field"><label for="f-problems">সমস্যা / জটিলতা</label><textarea id="f-problems"></textarea></div>
+          <div class="field"><label for="f-notes">অতিরিক্ত মন্তব্য</label><textarea id="f-notes"></textarea></div>
+        </div>
+
+        <!-- DYNAMIC CUSTOM FIELDS CONTAINER -->
+        <div id="dynamicCustomFieldsContainer"></div>
+
+        <div class="card">
+          <button type="submit" class="btn" id="submitBtn">রিপোর্ট জমা দিন</button>
+          <div class="status-msg" id="statusMsg"></div>
+        </div>
+      </form>
+
+      <div id="successView">
+        <div class="stamp">✔ জমা হয়েছে</div>
+        <p>আজকের রিপোর্ট সফলভাবে পাঠানো হয়েছে।</p>
+        <div class="rid" id="ridDisplay"></div>
+        <button class="btn ghost" style="margin-top:16px" id="newReportBtn">নতুন রিপোর্ট / ড্যাশবোর্ডে ফিরুন</button>
+      </div>
+    </section>
+
+    <!-- ============ ESTIMATION ============ -->
+    <section class="view" id="view-estimation">
+      <form id="estForm">
+        <div class="card">
+          <div class="card-head"><span class="num">EST.01</span>
+            <h2>বাজেট ও সময়সীমা</h2>
+          </div>
+          <div class="field"><label>সাইটের নাম</label><input type="text" id="e-site"></div>
+          <div class="field"><label>মোট বাজেট (৳)</label><input type="number" id="e-budget" step="any"></div>
+          <div class="row2">
+            <div class="field"><label>শুরুর তারিখ</label><input type="date" id="e-start"></div>
+            <div class="field"><label>সমাপ্তির লক্ষ্য তারিখ</label><input type="date" id="e-end"></div>
+          </div>
+        </div>
+
+        <div class="tick-divider"></div>
+
+        <div class="card">
+          <div class="card-head"><span class="num">EST.02</span>
+            <h2>মালামাল পরিমাণ (পরিকল্পিত)</h2>
+          </div>
+          <div class="mat-row">
+            <div class="ico">🧱</div>
+            <div class="qty-wrap"><span>সিমেন্ট</span><input type="number" id="e-cement-qty" step="any"></div><select
+              id="e-cement-unit">
+              <option value="বস্তা">বস্তা</option>
+              <option value="কেজি">কেজি</option>
+              <option value="টন">টন</option>
+            </select>
+          </div>
+          <div class="mat-row">
+            <div class="ico">🔩</div>
+            <div class="qty-wrap"><span>রড/স্টিল</span><input type="number" id="e-rod-qty" step="any"></div><select
+              id="e-rod-unit">
+              <option value="টন">টন</option>
+              <option value="কেজি">কেজি</option>
+              <option value="পিস">পিস</option>
+            </select>
+          </div>
+          <div class="mat-row">
+            <div class="ico">⛱️</div>
+            <div class="qty-wrap"><span>বালি</span><input type="number" id="e-sand-qty" step="any"></div><select
+              id="e-sand-unit">
+              <option value="ট্রাক">ট্রাক</option>
+              <option value="বস্তা">বস্তা</option>
+              <option value="সিএফটি">সিএফটি</option>
+              <option value="টন">টন</option>
+            </select>
+          </div>
+          <div class="mat-row">
+            <div class="ico">🧊</div>
+            <div class="qty-wrap"><span>ইট</span><input type="number" id="e-brick-qty" step="any"></div><select
+              id="e-brick-unit">
+              <option value="পিস">পিস</option>
+              <option value="হাজার পিস">হাজার পিস</option>
+            </select>
+          </div>
+          <div class="mat-row">
+            <div class="ico">🪨</div>
+            <div class="qty-wrap"><span>কংক্রিট</span><input type="number" id="e-concrete-qty" step="any"></div><select
+              id="e-concrete-unit">
+              <option value="সিএফটি">সিএফটি</option>
+              <option value="ঘনমিটার">ঘনমিটার</option>
+              <option value="ব্যাগ">ব্যাগ</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="tick-divider"></div>
+
+        <div class="card">
+          <div class="card-head"><span class="num">EST.03</span>
+            <h2>নির্মাণ ধাপসমূহ</h2>
+          </div>
+          <div id="phaseBuilder"></div>
+          <button type="button" class="btn small ghost" id="addPhaseBtn" style="margin-top:6px">+ নতুন ধাপ যোগ
+            করুন</button>
+        </div>
+
+        <div class="tick-divider"></div>
+
+        <div class="card">
+          <div class="card-head"><span class="num">EST.04</span>
+            <h2>মন্তব্য</h2>
+          </div>
+          <div class="field"><textarea id="e-notes" placeholder="অতিরিক্ত কোনো তথ্য"></textarea></div>
+        </div>
+
+        <div class="card">
+          <button type="submit" class="btn" id="estSubmitBtn">এস্টিমেশন সংরক্ষণ করুন</button>
+          <div class="status-msg" id="estStatusMsg"></div>
+        </div>
+      </form>
+    </section>
+
+    <!-- ============ HISTORY ============ -->
+    <section class="view" id="view-history">
+      <div class="card">
+        <div class="card-head"><span class="num">HIS.01</span>
+          <h2>রিপোর্ট ইতিহাস (Telegram & Form)</h2>
+        </div>
+        <div class="filter-row">
+          <input type="date" id="h-from">
+          <input type="date" id="h-to">
+          <button class="btn small" id="h-filter-btn">খুঁজুন</button>
+        </div>
+        <button class="btn small ghost" id="h-export-btn" style="margin-bottom:10px">CSV এক্সপোর্ট</button>
+        <div id="historyList">
+          <div class="loading-row">লোড হচ্ছে...</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ SETUP / MASTER SECTION ============ -->
+    <section class="view" id="view-setup">
+      <form id="setupForm">
+        <div class="card">
+          <div class="card-head"><span class="num">SET.01</span>
+            <h2>মাস্টার সেটআপ (একবারের তথ্য)</h2>
+          </div>
+          <div class="field"><label>কোম্পানির নাম</label><input type="text" id="s-company"
+              placeholder="e.g. Dream Construction"></div>
+          <div class="field"><label>সাইটের নাম</label><input type="text" id="s-site"
+              placeholder="e.g. Green Valley Site 01"></div>
+          <div class="field"><label>ইঞ্জিনিয়ারের নাম</label><input type="text" id="s-engineer"
+              placeholder="e.g. Engr. Tanvir Ahmed"></div>
+          <div class="field"><label>রিপোর্ট ইমেইল (দৈনিক সামারি পাবে)</label><input type="email" id="s-email"
+              placeholder="site@company.com"></div>
+        </div>
+
+        <div class="card">
+          <button type="submit" class="btn" id="setupSubmitBtn">মাস্টার তথ্য সংরক্ষণ করুন</button>
+          <span class="saved-chip hidden" id="setupSavedChip">✔ সংরক্ষিত হয়েছে</span>
+          <div class="status-msg" id="setupStatusMsg"></div>
+        </div>
+      </form>
+
+      <!-- DYNAMIC FORM FIELD BUILDER MASTER SECTION -->
+      <div class="card">
+        <div class="card-head"><span class="num">SET.02</span>
+          <h2>ডাইনামিক কাস্টম ফিল্ড বিল্ডার (Master Control)</h2>
+        </div>
+        <p style="font-size:12px;color:var(--ink-soft);margin-bottom:12px;">এখান থেকে আপনি ইচ্ছামতো নতুন ইনপুট ফিল্ড
+          ডাইনামিকালি যোগ বা রিমুভ করতে পারবেন, যা সরাসরি Daily Report ফর্মে রেন্ডার হবে।</p>
+
+        <div id="customFieldsList"></div>
+
+        <div style="border-top:1px dashed var(--line); padding-top:12px; margin-top:12px;">
+          <h3 style="font-size:13.5px; margin-bottom:8px;">+ নতুন ফিল্ড যোগ করুন</h3>
+          <div class="field"><label>ফিল্ডের নাম (Label)</label><input type="text" id="cf-label"
+              placeholder="যেমন: মালামাল ভাউচার নং / সাইট খরচ"></div>
+          <div class="row2">
+            <div class="field">
+              <label>ইনপুট টাইপ</label>
+              <select id="cf-type">
+                <option value="text">Single Text</option>
+                <option value="number">Number</option>
+                <option value="textarea">Textarea</option>
+                <option value="date">Date</option>
+              </select>
+            </div>
+            <div class="field">
+              <label>আবশ্যক (Required?)</label>
+              <select id="cf-required">
+                <option value="false">ঐচ্ছিক (Optional)</option>
+                <option value="true">অবশ্যই লাগবে (Required)</option>
+              </select>
+            </div>
+          </div>
+          <button type="button" class="btn small" onclick="addCustomField()">+ ফিল্ড যুক্ত করুন</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-head"><span class="num">SET.03</span>
+          <h2>n8n & Google Sheets সংযোগ</h2>
+        </div>
+        <div class="field">
+          <label>Google Sheet Published CSV / Apps Script API Link (Fallback URL)</label>
+          <input type="url" id="s-sheet-url" placeholder="https://docs.google.com/spreadsheets/d/.../pub?output=csv">
+          <small style="font-size:10.5px; color:var(--ink-soft); display:block; margin-top:4px;">n8n Webhook অফলাইন
+            থাকলে বা Google Sheet থেকে সরাসরি ডেটা টানতে এই লিংকটি ব্যবহৃত হবে।</small>
+        </div>
+        <button type="button" class="btn small ghost" onclick="saveSheetUrl()" style="margin-top:6px">Sheet Link সংরক্ষণ
+          করুন</button>
+        <div class="status-msg" id="sheetUrlStatus"></div>
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- Bottom Navigation Bar -->
+  <div class="tabbar" id="tabbar">
+    <button data-tab="dashboard" class="active"><span class="ic">📊</span>ড্যাশবোর্ড</button>
+    <button data-tab="report"><span class="ic">📝</span>রিপোর্ট</button>
+    <button data-tab="estimation"><span class="ic">🎯</span>এস্টিমেশন</button>
+    <button data-tab="history"><span class="ic">🗂️</span>ইতিহাস</button>
+    <button data-tab="setup"><span class="ic">⚙️</span>সেটআপ</button>
   </div>
-  <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
-  <div class="progress-label"><span id="progressText">0% পূরণ হয়েছে</span><span id="progressCount">0 / 0</span></div>
-</header>
 
-<main>
-<div id="formView">
-  <form id="reportForm" novalidate>
+  <script>
+    /* =========================================================================
+       CONFIG — n8n Webhook Endpoints
+       ========================================================================= */
+    const CONFIG = {
+      SUBMIT_REPORT_URL: "https://n8n-scad.srv1492862.hstgr.cloud/webhook/submit-report",
+      GET_DASHBOARD_URL: "https://n8n-scad.srv1492862.hstgr.cloud/webhook/get-dashboard",
+      GET_HISTORY_URL: "https://n8n-scad.srv1492862.hstgr.cloud/webhook/get-history",
+      GET_ESTIMATION_URL: "https://n8n-scad.srv1492862.hstgr.cloud/webhook/get-estimation",
+      SAVE_ESTIMATION_URL: "https://n8n-scad.srv1492862.hstgr.cloud/webhook/save-estimation",
+      GET_SETUP_URL: "https://n8n-scad.srv1492862.hstgr.cloud/webhook/get-setup",
+      SAVE_SETUP_URL: "https://n8n-scad.srv1492862.hstgr.cloud/webhook/save-setup"
+    };
 
-    <!-- SEC 01 : Project info -->
-    <div class="card">
-      <div class="card-head"><span class="num">SEC.01</span><h2>প্রজেক্ট তথ্য</h2></div>
-      <div class="row2">
-        <div class="field">
-          <label class="req" for="f-date">তারিখ</label>
-          <input type="date" id="f-date" required>
-        </div>
-        <div class="field">
-          <label class="req" for="f-site">সাইট নাম</label>
-          <input type="text" id="f-site" placeholder="যেমন: টঙ্গী" required>
-        </div>
-      </div>
-      <div class="field">
-        <label class="req" for="f-engineer">ইঞ্জিনিয়ারের নাম</label>
-        <input type="text" id="f-engineer" placeholder="আপনার নাম লিখুন" required>
-      </div>
-    </div>
-
-    <div class="tick-divider"></div>
-
-    <!-- SEC 02 : Materials -->
-    <div class="card">
-      <div class="card-head"><span class="num">SEC.02</span><h2>মালামাল ব্যবহার</h2></div>
-      <div class="mat-grid">
-
-        <div class="mat-row">
-          <div class="ico">🧱</div>
-          <div class="qty-wrap"><span>সিমেন্ট</span>
-            <input type="number" min="0" step="any" id="f-cement-qty" placeholder="0">
-          </div>
-          <select id="f-cement-unit">
-            <option value="বস্তা">বস্তা</option>
-            <option value="কেজি">কেজি</option>
-            <option value="টন">টন</option>
-          </select>
-        </div>
-
-        <div class="mat-row">
-          <div class="ico">🔩</div>
-          <div class="qty-wrap"><span>রড / স্টিল</span>
-            <input type="number" min="0" step="any" id="f-rod-qty" placeholder="0">
-          </div>
-          <select id="f-rod-unit">
-            <option value="টন">টন</option>
-            <option value="কেজি">কেজি</option>
-            <option value="পিস">পিস</option>
-          </select>
-        </div>
-
-        <div class="mat-row">
-          <div class="ico">⛱️</div>
-          <div class="qty-wrap"><span>বালি</span>
-            <input type="number" min="0" step="any" id="f-sand-qty" placeholder="0">
-          </div>
-          <select id="f-sand-unit">
-            <option value="বস্তা">বস্তা</option>
-            <option value="ট্রাক">ট্রাক</option>
-            <option value="সিএফটি">সিএফটি</option>
-            <option value="টন">টন</option>
-          </select>
-        </div>
-
-        <div class="mat-row">
-          <div class="ico">🧱</div>
-          <div class="qty-wrap"><span>ইট</span>
-            <input type="number" min="0" step="any" id="f-brick-qty" placeholder="0">
-          </div>
-          <select id="f-brick-unit">
-            <option value="পিস">পিস</option>
-            <option value="হাজার পিস">হাজার পিস</option>
-          </select>
-        </div>
-
-        <div class="mat-row">
-          <div class="ico">🪨</div>
-          <div class="qty-wrap"><span>কংক্রিট</span>
-            <input type="number" min="0" step="any" id="f-concrete-qty" placeholder="0">
-          </div>
-          <select id="f-concrete-unit">
-            <option value="সিএফটি">সিএফটি</option>
-            <option value="ঘনমিটার">ঘনমিটার</option>
-            <option value="ব্যাগ">ব্যাগ</option>
-          </select>
-        </div>
-
-      </div>
-    </div>
-
-    <div class="tick-divider"></div>
-
-    <!-- SEC 03 : Workforce -->
-    <div class="card">
-      <div class="card-head"><span class="num">SEC.03</span><h2>জনবল</h2></div>
-      <div class="field">
-        <label for="f-labor">আজকে মোট শ্রমিক সংখ্যা</label>
-        <input type="number" min="0" step="1" id="f-labor" placeholder="যেমন: 25">
-      </div>
-    </div>
-
-    <div class="tick-divider"></div>
-
-    <!-- SEC 04 : Work progress -->
-    <div class="card">
-      <div class="card-head"><span class="num">SEC.04</span><h2>কাজের অগ্রগতি</h2></div>
-      <div class="field">
-        <label class="req" for="f-work-completed">আজকে যে কাজ সম্পন্ন হয়েছে</label>
-        <textarea id="f-work-completed" placeholder="যেমন: দুই তলা পর্যন্ত ঢালাই সম্পন্ন হয়েছে" required></textarea>
-      </div>
-      <div class="field">
-        <label for="f-work-progress">যে কাজ চলমান আছে</label>
-        <textarea id="f-work-progress" placeholder="বর্তমানে চলমান কাজের বিবরণ"></textarea>
-      </div>
-    </div>
-
-    <div class="tick-divider"></div>
-
-    <!-- SEC 05 : Material status -->
-    <div class="card">
-      <div class="card-head"><span class="num">SEC.05</span><h2>মালামাল পরিস্থিতি</h2></div>
-
-      <div class="field">
-        <label>মালামালের মজুদ অবস্থা</label>
-        <div class="seg" id="stockSeg">
-          <button type="button" data-v="good">পর্যাপ্ত</button>
-          <button type="button" data-v="mid">মাঝারি</button>
-          <button type="button" data-v="low">সংকট</button>
-        </div>
-        <input type="hidden" id="f-stock-status">
-      </div>
-
-      <div class="field">
-        <label for="f-low-stock">কোন মালামাল কম আছে</label>
-        <input type="text" id="f-low-stock" placeholder="যেমন: বালি, সিমেন্ট">
-      </div>
-      <div class="field">
-        <label for="f-nearly-finished">কোন মালামাল প্রায় শেষ</label>
-        <input type="text" id="f-nearly-finished" placeholder="যেমন: বালি">
-      </div>
-      <div class="field">
-        <label for="f-materials-required">কী কী মালামাল প্রয়োজন</label>
-        <textarea id="f-materials-required" placeholder="প্রয়োজনীয় মালামালের তালিকা"></textarea>
-      </div>
-      <div class="field">
-        <label for="f-action-required">কী পদক্ষেপ নেওয়া প্রয়োজন</label>
-        <textarea id="f-action-required" placeholder="যেমন: আগামীকালের মধ্যে বালি সরবরাহ প্রয়োজন"></textarea>
-      </div>
-    </div>
-
-    <div class="tick-divider"></div>
-
-    <!-- SEC 06 : Issues -->
-    <div class="card">
-      <div class="card-head"><span class="num">SEC.06</span><h2>সমস্যা ও মন্তব্য</h2></div>
-      <div class="field">
-        <label for="f-problems">সমস্যা / জটিলতা</label>
-        <textarea id="f-problems" placeholder="আজকে কোনো সমস্যা হয়ে থাকলে লিখুন"></textarea>
-      </div>
-      <div class="field">
-        <label for="f-notes">অতিরিক্ত মন্তব্য</label>
-        <textarea id="f-notes" placeholder="অন্য কোনো তথ্য"></textarea>
-      </div>
-    </div>
-
-    <div class="submit-wrap">
-      <button type="submit" id="submitBtn">রিপোর্ট জমা দিন</button>
-      <div class="status-msg" id="statusMsg"></div>
-    </div>
-
-  </form>
-</div>
-
-<div id="successView">
-  <div class="stamp">✔ জমা হয়েছে</div>
-  <p>আপনার দৈনিক রিপোর্ট সফলভাবে পাঠানো হয়েছে।</p>
-  <div class="rid" id="ridDisplay"></div>
-  <button id="newReportBtn">নতুন রিপোর্ট লিখুন</button>
-</div>
-</main>
-
-<script>
-/* =========================================================
-   CONFIG — এখানে তোমার n8n webhook URL বসাও
-   ========================================================= */
-const WEBHOOK_URL = "https://n8n-scad.srv1492862.hstgr.cloud/webhook/b77e09fb-c9ad-4ea9-9ff0-d931d0fbcb4c"; // TEST URL — go-live হওয়ার আগে production URL দিয়ে বদলাতে হবে (নিচের নোট দেখো)
-
-/* ---------- Telegram WebApp init ---------- */
-const tg = window.Telegram ? window.Telegram.WebApp : null;
-if (tg) {
-  tg.ready();
-  tg.expand();
-  try { tg.setHeaderColor('#16232e'); } catch(e){}
-  try { tg.setBackgroundColor('#eceee8'); } catch(e){}
-}
-
-/* ---------- Header date ---------- */
-const today = new Date();
-const isoDate = today.toISOString().slice(0,10);
-document.getElementById('f-date').value = isoDate;
-document.getElementById('headerDate').textContent = today.toLocaleDateString('bn-BD', { day:'2-digit', month:'short', year:'numeric' });
-
-/* auto-fill engineer name from Telegram profile, if available */
-if (tg && tg.initDataUnsafe && tg.initDataUnsafe.user) {
-  const u = tg.initDataUnsafe.user;
-  const name = [u.first_name, u.last_name].filter(Boolean).join(' ');
-  if (name) document.getElementById('f-engineer').placeholder = name;
-}
-
-/* ---------- Segmented control (stock status) ---------- */
-const seg = document.getElementById('stockSeg');
-const stockHidden = document.getElementById('f-stock-status');
-seg.addEventListener('click', (e) => {
-  const btn = e.target.closest('button');
-  if (!btn) return;
-  [...seg.children].forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  const map = { good:'পর্যাপ্ত', mid:'মাঝারি', low:'সংকট' };
-  stockHidden.value = map[btn.dataset.v];
-  updateProgress();
-});
-
-/* ---------- Progress tracker ---------- */
-const form = document.getElementById('reportForm');
-const trackables = () => [...form.querySelectorAll('input, textarea')].filter(el => el.type !== 'hidden');
-function updateProgress(){
-  const els = trackables();
-  const filled = els.filter(el => el.value && el.value.trim() !== '').length + (stockHidden.value ? 1 : 0);
-  const total = els.length + 1;
-  const pct = Math.round((filled/total)*100);
-  document.getElementById('progressFill').style.width = pct + '%';
-  document.getElementById('progressText').textContent = pct + '% পূরণ হয়েছে';
-  document.getElementById('progressCount').textContent = filled + ' / ' + total;
-}
-form.addEventListener('input', updateProgress);
-updateProgress();
-
-/* ---------- Helpers ---------- */
-function genReportId(){
-  const d = new Date();
-  const pad = n => String(n).padStart(2,'0');
-  const stamp = `${d.getFullYear()}${pad(d.getMonth()+1)}${pad(d.getDate())}-${pad(d.getHours())}${pad(d.getMinutes())}${pad(d.getSeconds())}`;
-  return `REP-${stamp}`;
-}
-function val(id){ return document.getElementById(id).value.trim(); }
-function num(id){ const v = document.getElementById(id).value; return v === '' ? null : Number(v); }
-
-/* ---------- Submit ---------- */
-const submitBtn = document.getElementById('submitBtn');
-const statusMsg = document.getElementById('statusMsg');
-
-form.addEventListener('submit', async (e) => {
-  e.preventDefault();
-  statusMsg.textContent = '';
-  statusMsg.className = 'status-msg';
-
-  // required field validation
-  const required = ['f-date','f-site','f-engineer','f-work-completed'];
-  let firstInvalid = null;
-  required.forEach(id => {
-    const el = document.getElementById(id);
-    if (!el.value || el.value.trim() === '') {
-      el.classList.add('err');
-      if (!firstInvalid) firstInvalid = el;
-    } else {
-      el.classList.remove('err');
+    /* ---------- Telegram WebApp Init ---------- */
+    const tg = window.Telegram ? window.Telegram.WebApp : null;
+    if (tg) {
+      tg.ready(); tg.expand();
+      try { tg.setHeaderColor('#16232e'); } catch (e) { }
+      try { tg.setBackgroundColor('#eceee8'); } catch (e) { }
     }
-  });
-  if (firstInvalid) {
-    firstInvalid.scrollIntoView({behavior:'smooth', block:'center'});
-    statusMsg.textContent = 'দয়া করে চিহ্নিত (*) ঘরগুলো পূরণ করুন';
-    statusMsg.className = 'status-msg error';
-    if (tg) tg.HapticFeedback && tg.HapticFeedback.notificationOccurred('error');
-    return;
-  }
+    function haptic(type) { if (tg && tg.HapticFeedback) tg.HapticFeedback.notificationOccurred(type); }
 
-  const payload = {
-    report_id: genReportId(),
-    date: val('f-date'),
-    site_name: val('f-site'),
-    engineer_name: val('f-engineer'),
-    cement_used: num('f-cement-qty'),
-    cement_unit: val('f-cement-unit') ? document.getElementById('f-cement-unit').value : null,
-    rod_steel_used: num('f-rod-qty'),
-    rod_steel_unit: document.getElementById('f-rod-unit').value,
-    sand_used: num('f-sand-qty'),
-    sand_unit: document.getElementById('f-sand-unit').value,
-    brick_used: num('f-brick-qty'),
-    brick_unit: document.getElementById('f-brick-unit').value,
-    concrete_used: num('f-concrete-qty'),
-    concrete_unit: document.getElementById('f-concrete-unit').value,
-    labor_count: num('f-labor'),
-    work_completed: val('f-work-completed'),
-    work_in_progress: val('f-work-progress') || null,
-    material_stock_status: stockHidden.value || null,
-    low_stock_materials: val('f-low-stock') || null,
-    materials_nearby_finished: val('f-nearly-finished') || null,
-    materials_required: val('f-materials-required') || null,
-    action_required: val('f-action-required') || null,
-    problems_or_issue: val('f-problems') || null,
-    additional_notes: val('f-notes') || null,
-    submitted_at: new Date().toISOString(),
-    telegram_user_id: (tg && tg.initDataUnsafe && tg.initDataUnsafe.user) ? tg.initDataUnsafe.user.id : null,
-    telegram_username: (tg && tg.initDataUnsafe && tg.initDataUnsafe.user) ? tg.initDataUnsafe.user.username : null
-  };
+    /* ---------- Header Date ---------- */
+    const today = new Date();
+    const isoDate = today.toISOString().slice(0, 10);
+    document.getElementById('headerDate').textContent = today.toLocaleDateString('bn-BD', { day: '2-digit', month: 'short', year: 'numeric' });
+    document.getElementById('f-date').value = isoDate;
 
-  submitBtn.disabled = true;
-  submitBtn.textContent = 'পাঠানো হচ্ছে...';
+    /* ---------- Global Application State & Storage ---------- */
+    const STATE = {
+      setup: JSON.parse(localStorage.getItem('tg_site_setup')) || null,
+      estimation: JSON.parse(localStorage.getItem('tg_site_estimation')) || null,
+      dashboard: null,
+      history: null,
+      customFields: JSON.parse(localStorage.getItem('tg_custom_fields')) || [],
+      fallbackSheetUrl: localStorage.getItem('tg_sheet_url') || ""
+    };
 
-  try {
-    const res = await fetch(WEBHOOK_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload)
+    /* ---------- Tab Navigation ---------- */
+    function goTab(name) {
+      document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+      document.getElementById('view-' + name).classList.add('active');
+      document.querySelectorAll('.tabbar button').forEach(b => b.classList.toggle('active', b.dataset.tab === name));
+      window.scrollTo(0, 0);
+      if (name === 'dashboard') loadDashboard();
+      if (name === 'estimation' && !STATE.estimation) loadEstimation();
+      if (name === 'history' && !STATE.history) loadHistory();
+      if (name === 'setup') loadSetupView();
+    }
+
+    document.getElementById('tabbar').addEventListener('click', (e) => {
+      const btn = e.target.closest('button'); if (!btn) return;
+      goTab(btn.dataset.tab);
     });
-    if (!res.ok) throw new Error('Server error: ' + res.status);
 
-    if (tg) tg.HapticFeedback && tg.HapticFeedback.notificationOccurred('success');
-    document.getElementById('ridDisplay').textContent = payload.report_id;
-    document.getElementById('formView').classList.add('hidden');
-    document.getElementById('successView').style.display = 'block';
+    /* =========================================================================
+       HELPERS & DYNAMIC FORM BUILDER
+       ========================================================================= */
+    function val(id) { const el = document.getElementById(id); return el ? el.value.trim() : ''; }
+    function num(id) { const el = document.getElementById(id); if (!el) return null; const v = el.value; return v === '' ? null : Number(v); }
+    function genReportId() {
+      const d = new Date(); const pad = n => String(n).padStart(2, '0');
+      return `REP-${d.getFullYear()}${pad(d.getMonth() + 1)}${pad(d.getDate())}-${pad(d.getHours())}${pad(d.getMinutes())}${pad(d.getSeconds())}`;
+    }
 
-  } catch (err) {
-    statusMsg.textContent = 'পাঠাতে সমস্যা হয়েছে। আবার চেষ্টা করুন। (' + err.message + ')';
-    statusMsg.className = 'status-msg error';
-    if (tg) tg.HapticFeedback && tg.HapticFeedback.notificationOccurred('error');
-  } finally {
-    submitBtn.disabled = false;
-    submitBtn.textContent = 'রিপোর্ট জমা দিন';
-  }
-});
+    async function safeFetch(url, opts) {
+      try {
+        const res = await fetch(url, opts);
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+        const text = await res.text();
+        return text ? JSON.parse(text) : {};
+      } catch (err) {
+        console.warn('Fetch URL failed, falling back:', url, err);
+        return null;
+      }
+    }
 
-document.getElementById('newReportBtn').addEventListener('click', () => {
-  form.reset();
-  document.getElementById('f-date').value = isoDate;
-  [...seg.children].forEach(b => b.classList.remove('active'));
-  stockHidden.value = '';
-  document.getElementById('successView').style.display = 'none';
-  document.getElementById('formView').classList.remove('hidden');
-  updateProgress();
-  window.scrollTo(0,0);
-});
-</script>
+    function fillHeader(setup) {
+      if (!setup) return;
+      document.getElementById('hdrCompany').textContent = setup.company_name || 'সাইট ম্যানেজমেন্ট';
+      document.getElementById('hdrSite').textContent = setup.site_name || 'Telegram Voice & WebApp System';
+      const siteField = document.getElementById('f-site');
+      if (siteField && !siteField.value) siteField.value = setup.site_name || '';
+      const engField = document.getElementById('f-engineer');
+      if (engField && !engField.value) engField.value = setup.engineer_name || '';
+    }
+
+    /* Auto-fill engineer name from Telegram profile */
+    if (tg && tg.initDataUnsafe && tg.initDataUnsafe.user) {
+      const u = tg.initDataUnsafe.user;
+      const name = [u.first_name, u.last_name].filter(Boolean).join(' ');
+      if (name && document.getElementById('f-engineer')) {
+        document.getElementById('f-engineer').placeholder = name;
+      }
+    }
+
+    /* Dynamic Custom Fields Renderer for Daily Report */
+    function renderCustomFieldsInReport() {
+      const container = document.getElementById('dynamicCustomFieldsContainer');
+      if (!container) return;
+      container.innerHTML = '';
+
+      if (!STATE.customFields || STATE.customFields.length === 0) return;
+
+      const card = document.createElement('div');
+      card.className = 'card';
+      let fieldsHTML = '<div class="card-head"><span class="num">SEC.06</span><h2>অতিরিক্ত কাস্টম ফিল্ড</h2></div>';
+
+      STATE.customFields.forEach(cf => {
+        const reqStar = cf.required ? 'class="req"' : '';
+        let inputHTML = '';
+
+        if (cf.type === 'textarea') {
+          inputHTML = `<textarea id="cf_${cf.id}" ${cf.required ? 'required' : ''}></textarea>`;
+        } else {
+          inputHTML = `<input type="${cf.type}" id="cf_${cf.id}" ${cf.required ? 'required' : ''}>`;
+        }
+
+        fieldsHTML += `<div class="field"><label ${reqStar} for="cf_${cf.id}">${cf.label}</label>${inputHTML}</div>`;
+      });
+
+      card.innerHTML = fieldsHTML;
+      container.appendChild(card);
+    }
+
+    /* Master Control: Add / Remove Custom Fields */
+    function renderCustomFieldsMasterList() {
+      const container = document.getElementById('customFieldsList');
+      if (!container) return;
+
+      if (STATE.customFields.length === 0) {
+        container.innerHTML = '<div class="empty-note">কোনো কাস্টম ফিল্ড যোগ করা হয়নি।</div>';
+        return;
+      }
+
+      container.innerHTML = STATE.customFields.map((cf, idx) => `
+    <div class="custom-field-item">
+      <div>
+        <strong>${cf.label}</strong>
+        <span class="tag">${cf.type}</span>
+        ${cf.required ? '<span style="color:var(--alert); font-size:10px;">(Required)</span>' : ''}
+      </div>
+      <button type="button" class="btn small danger" onclick="removeCustomField(${idx})">✕ মুছে ফেলুন</button>
+    </div>
+  `).join('');
+    }
+
+    function addCustomField() {
+      const label = val('cf-label');
+      const type = val('cf-type');
+      const required = val('cf-required') === 'true';
+
+      if (!label) {
+        alert('ফিল্ডের নাম আবশ্যক!');
+        return;
+      }
+
+      const newField = {
+        id: label.toLowerCase().replace(/[^a-z0-9]/g, '_') + '_' + Date.now(),
+        label: label,
+        type: type,
+        required: required
+      };
+
+      STATE.customFields.push(newField);
+      localStorage.setItem('tg_custom_fields', JSON.stringify(STATE.customFields));
+
+      document.getElementById('cf-label').value = '';
+      renderCustomFieldsMasterList();
+      renderCustomFieldsInReport();
+      haptic('success');
+    }
+
+    function removeCustomField(idx) {
+      STATE.customFields.splice(idx, 1);
+      localStorage.setItem('tg_custom_fields', JSON.stringify(STATE.customFields));
+      renderCustomFieldsMasterList();
+      renderCustomFieldsInReport();
+      haptic('error');
+    }
+
+    function saveSheetUrl() {
+      const url = val('s-sheet-url');
+      STATE.fallbackSheetUrl = url;
+      localStorage.setItem('tg_sheet_url', url);
+      document.getElementById('sheetUrlStatus').textContent = '✔ Google Sheet Link সংরক্ষণ করা হয়েছে';
+      document.getElementById('sheetUrlStatus').className = 'status-msg ok';
+      haptic('success');
+    }
+
+    /* =========================================================================
+       DAILY REPORT FORM SUBMISSION
+       ========================================================================= */
+    const seg = document.getElementById('stockSeg');
+    const stockHidden = document.getElementById('f-stock-status');
+    seg.addEventListener('click', (e) => {
+      const btn = e.target.closest('button'); if (!btn) return;
+      [...seg.children].forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      const map = { good: 'পর্যাপ্ত', mid: 'মাঝারি', low: 'সংকট' };
+      stockHidden.value = map[btn.dataset.v];
+    });
+
+    const reportForm = document.getElementById('reportForm');
+    const submitBtn = document.getElementById('submitBtn');
+    const statusMsg = document.getElementById('statusMsg');
+
+    reportForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      statusMsg.textContent = ''; statusMsg.className = 'status-msg';
+
+      const required = ['f-date', 'f-site', 'f-engineer', 'f-work-completed'];
+      let firstInvalid = null;
+      required.forEach(id => {
+        const el = document.getElementById(id);
+        if (!el.value || el.value.trim() === '') { el.classList.add('err'); if (!firstInvalid) firstInvalid = el; }
+        else el.classList.remove('err');
+      });
+
+      if (firstInvalid) {
+        firstInvalid.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        statusMsg.textContent = 'দয়া করে চিহ্নিত (*) ঘরগুলো পূরণ করুন';
+        statusMsg.className = 'status-msg error'; haptic('error');
+        return;
+      }
+
+      // Collect Custom Dynamic Fields Data
+      const customDataObj = {};
+      STATE.customFields.forEach(cf => {
+        const el = document.getElementById('cf_' + cf.id);
+        if (el) customDataObj[cf.label] = el.value;
+      });
+
+      const payload = {
+        report_id: genReportId(),
+        date: val('f-date'), site_name: val('f-site'), engineer_name: val('f-engineer'),
+        input_method: 'telegram_webapp',
+        cement_used: num('f-cement-qty'), cement_unit: val('f-cement-unit') || null,
+        rod_steel_used: num('f-rod-qty'), rod_steel_unit: val('f-rod-unit') || null,
+        sand_used: num('f-sand-qty'), sand_unit: val('f-sand-unit') || null,
+        brick_used: num('f-brick-qty'), brick_unit: val('f-brick-unit') || null,
+        concrete_used: num('f-concrete-qty'), concrete_unit: val('f-concrete-unit') || null,
+        labor_count: num('f-labor'),
+        work_completed: val('f-work-completed'), work_in_progress: val('f-work-progress') || null,
+        material_stock_status: stockHidden.value || null,
+        low_stock_materials: val('f-low-stock') || null,
+        materials_nearly_finished: val('f-nearly-finished') || null,
+        materials_required: val('f-materials-required') || null,
+        action_required: val('f-action-required') || null,
+        problems_or_issues: val('f-problems') || null,
+        additional_notes: val('f-notes') || null,
+        custom_fields: customDataObj,
+        submitted_at: new Date().toISOString(),
+        telegram_user_id: (tg && tg.initDataUnsafe && tg.initDataUnsafe.user) ? tg.initDataUnsafe.user.id : null,
+        telegram_username: (tg && tg.initDataUnsafe && tg.initDataUnsafe.user) ? tg.initDataUnsafe.user.username : null
+      };
+
+      submitBtn.disabled = true; submitBtn.textContent = 'পাঠানো হচ্ছে...';
+      let result = await safeFetch(CONFIG.SUBMIT_REPORT_URL, {
+        method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload)
+      });
+
+      submitBtn.disabled = false; submitBtn.textContent = 'রিপোর্ট জমা দিন';
+
+      // Fallback save to LocalStorage if n8n endpoint is offline
+      if (result === null) {
+        let localReports = JSON.parse(localStorage.getItem('local_site_reports')) || [];
+        localReports.unshift(payload);
+        localStorage.setItem('local_site_reports', JSON.stringify(localReports));
+        statusMsg.textContent = '✔ অফলাইনে সংরক্ষিত হয়েছে (n8n কানেকশন ব্যাকআপ)।';
+        statusMsg.className = 'status-msg ok';
+      } else {
+        statusMsg.textContent = '✔ n8n & Google Sheet-এ জমা হয়েছে!';
+        statusMsg.className = 'status-msg ok';
+      }
+
+      haptic('success');
+      document.getElementById('ridDisplay').textContent = payload.report_id;
+      reportForm.classList.add('hidden');
+      document.getElementById('successView').style.display = 'block';
+      STATE.dashboard = null;
+    });
+
+    document.getElementById('newReportBtn').addEventListener('click', () => {
+      reportForm.reset();
+      reportForm.classList.remove('hidden');
+      document.getElementById('f-date').value = isoDate;
+      fillHeader(STATE.setup);
+      [...seg.children].forEach(b => b.classList.remove('active'));
+      stockHidden.value = '';
+      document.getElementById('successView').style.display = 'none';
+      goTab('dashboard');
+    });
+
+    /* =========================================================================
+       DASHBOARD & DATA RENDERER
+       ========================================================================= */
+    const MATERIALS = [
+      { key: 'cement', label: 'সিমেন্ট', icon: '🧱' },
+      { key: 'rod_steel', label: 'রড/স্টিল', icon: '🔩' },
+      { key: 'sand', label: 'বালি', icon: '⛱️' },
+      { key: 'brick', label: 'ইট', icon: '🧊' },
+      { key: 'concrete', label: 'কংক্রিট', icon: '🪨' }
+    ];
+    let usageChartInstance = null;
+
+    async function loadDashboard() {
+      const container = document.getElementById('materialProgress');
+      container.innerHTML = '<div class="loading-row">লোড হচ্ছে...</div>';
+
+      let data = await safeFetch(CONFIG.GET_DASHBOARD_URL);
+
+      // If n8n returns raw array of reports or object with reports array
+      if (Array.isArray(data)) {
+        data = buildFallbackDashboardData(data);
+      } else if (data && Array.isArray(data.reports) && !data.material_used) {
+        data = buildFallbackDashboardData(data.reports);
+      }
+
+      // If safeFetch returned null, try fetching from fallbackSheetUrl
+      if (!data && STATE.fallbackSheetUrl) {
+        try {
+          const sheetRes = await fetch(STATE.fallbackSheetUrl);
+          const sheetText = await sheetRes.text();
+          let rows = [];
+          if (sheetText.trim().startsWith('[')) {
+            rows = JSON.parse(sheetText);
+          } else if (sheetText.includes(',')) {
+            rows = parseCSV(sheetText);
+          }
+          if (rows.length > 0) {
+            data = buildFallbackDashboardData(rows);
+          }
+        } catch (e) {
+          console.warn('Fallback sheet fetch error:', e);
+        }
+      }
+
+      // Fallback to local storage reports if still null
+      if (!data) {
+        const localReports = JSON.parse(localStorage.getItem('local_site_reports')) || [];
+        data = buildFallbackDashboardData(localReports);
+      }
+
+      STATE.dashboard = data;
+      if (data.setup) { STATE.setup = data.setup; fillHeader(data.setup); }
+      if (data.estimation) STATE.estimation = data.estimation;
+
+      renderKpis(data);
+      renderMaterialProgress(data);
+      renderUsageChart(data);
+      renderPhases(data.estimation);
+      renderAlerts(data.alerts || []);
+      renderRecent(data.recent_reports || []);
+    }
+
+    function parseCSV(text) {
+      const lines = text.trim().split('\n');
+      if (lines.length < 2) return [];
+      const headers = lines[0].split(',').map(h => h.trim().replace(/^"(.*)"$/, '$1'));
+      const results = [];
+      for (let i = 1; i < lines.length; i++) {
+        const row = lines[i].split(',').map(r => r.trim().replace(/^"(.*)"$/, '$1'));
+        const obj = {};
+        headers.forEach((h, idx) => obj[h] = row[idx] || '');
+        results.push(obj);
+      }
+      return results;
+    }
+
+    function buildFallbackDashboardData(localReports) {
+      const usedMap = { cement: 0, rod_steel: 0, sand: 0, brick: 0, concrete: 0 };
+      const alerts = [];
+
+      localReports.forEach(r => {
+        if (r.cement_used) usedMap.cement += Number(r.cement_used);
+        if (r.rod_steel_used) usedMap.rod_steel += Number(r.rod_steel_used);
+        if (r.sand_used) usedMap.sand += Number(r.sand_used);
+        if (r.brick_used) usedMap.brick += Number(r.brick_used);
+        if (r.concrete_used) usedMap.concrete += Number(r.concrete_used);
+        if (r.material_stock_status === 'সংকট' || r.low_stock_materials) {
+          alerts.push({ date: r.date, message: `সংকট: ${r.low_stock_materials || 'স্টক সংকট'}` });
+        }
+      });
+
+      return {
+        today_submitted: localReports.some(r => r.date === isoDate),
+        material_used: usedMap,
+        setup: STATE.setup,
+        estimation: STATE.estimation,
+        recent_reports: localReports,
+        alerts: alerts
+      };
+    }
+
+    function renderKpis(data) {
+      const kpiToday = document.getElementById('kpiToday');
+      kpiToday.className = 'kpi ' + (data.today_submitted ? 'ok' : 'warn');
+      kpiToday.innerHTML = `<div class="v">${data.today_submitted ? '✔ হয়েছে' : '✕ বাকি'}</div><div class="l">আজকের রিপোর্ট</div>`;
+
+      const kpiPhase = document.getElementById('kpiPhase');
+      const currentPhase = (data.estimation && data.estimation.phases || []).find(p => p.status === 'in_progress');
+      kpiPhase.innerHTML = `<div class="v" style="font-size:14px">${currentPhase ? currentPhase.phase_name : '—'}</div><div class="l">বর্তমান ধাপ</div>`;
+    }
+
+    function progressColor(pct) { if (pct > 100) return 'over'; if (pct >= 80) return 'mid'; return 'ok'; }
+
+    function renderMaterialProgress(data) {
+      const container = document.getElementById('materialProgress');
+      const used = data.material_used || {};
+      const planned = (data.estimation && data.estimation.planned) || {};
+      let html = '';
+      MATERIALS.forEach(m => {
+        const u = used[m.key] || 0;
+        const p = planned[m.key] || 0;
+        const pct = p > 0 ? Math.round((u / p) * 100) : 0;
+        const cls = progressColor(pct);
+        html += `
+      <div class="prog-item">
+        <div class="prog-head"><span>${m.icon} ${m.label}</span><span class="pct">${pct}%</span></div>
+        <div class="prog-track"><div class="prog-fill ${cls}" style="width:${Math.min(pct, 100)}%"></div></div>
+        <div class="prog-nums">ব্যবহৃত: ${u} / পরিকল্পিত: ${p || '—'}</div>
+      </div>`;
+      });
+      container.innerHTML = html || '<div class="empty-note">কোনো ডেটা নেই</div>';
+    }
+
+    function renderUsageChart(data) {
+      const used = data.material_used || {};
+      const planned = (data.estimation && data.estimation.planned) || {};
+      const ctx = document.getElementById('usageChart');
+      const labels = MATERIALS.map(m => m.label);
+      const usedVals = MATERIALS.map(m => used[m.key] || 0);
+      const plannedVals = MATERIALS.map(m => planned[m.key] || 0);
+
+      if (usageChartInstance) usageChartInstance.destroy();
+      usageChartInstance = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels, datasets: [
+            { label: 'ব্যবহৃত', data: usedVals, backgroundColor: '#2c5f7c' },
+            { label: 'পরিকল্পিত', data: plannedVals, backgroundColor: '#f2a900' }
+          ]
+        },
+        options: { responsive: true, plugins: { legend: { labels: { font: { size: 11 } } } }, scales: { y: { beginAtZero: true } } }
+      });
+    }
+
+    function renderPhases(estimation) {
+      const list = document.getElementById('phaseList');
+      const phases = estimation && estimation.phases ? estimation.phases : [];
+      if (!phases.length) { list.innerHTML = '<li class="empty-note">এস্টিমেশন রিপোর্ট এখনো দেওয়া হয়নি</li>'; return; }
+      const now = new Date();
+      list.innerHTML = phases.map(p => {
+        const dotCls = p.status === 'completed' ? 'done' : (p.status === 'in_progress' ? 'progress' : 'pending');
+        let badge = '';
+        if (p.target_date) {
+          const target = new Date(p.target_date);
+          const diffDays = Math.round((target - now) / 86400000);
+          if (p.status !== 'completed') {
+            if (diffDays < 0) badge = `<span class="phase-badge behind">${Math.abs(diffDays)} দিন পিছিয়ে</span>`;
+            else badge = `<span class="phase-badge ahead">${diffDays} দিন বাকি</span>`;
+          } else {
+            badge = `<span class="phase-badge ontrack">সম্পন্ন</span>`;
+          }
+        }
+        return `<li class="phase-item">
+      <div class="phase-dot ${dotCls}"></div>
+      <div class="phase-info">
+        <div class="phase-name">${p.phase_name}</div>
+        <div class="phase-date">লক্ষ্য: ${p.target_date || '—'}</div>
+      </div>
+      ${badge}
+    </li>`;
+      }).join('');
+    }
+
+    function renderAlerts(alerts) {
+      const list = document.getElementById('alertList');
+      document.getElementById('alertCount').textContent = alerts.length ? alerts.length + ' টি' : '';
+      if (!alerts.length) { list.innerHTML = '<div class="empty-note">কোনো সতর্কতা নেই</div>'; return; }
+      list.innerHTML = alerts.map(a => `
+    <div class="alert-row"><span class="d">${a.date || ''}</span><span>${a.message || (a.low_stock_materials || a.materials_nearly_finished || 'স্টক সংকট')}</span></div>
+  `).join('');
+    }
+
+    function renderRecent(reports) {
+      const tbody = document.querySelector('#recentTable tbody');
+      if (!reports.length) { tbody.innerHTML = '<tr><td colspan="3" class="empty-note">কোনো রিপোর্ট নেই</td></tr>'; return; }
+      tbody.innerHTML = reports.slice(0, 5).map(r => {
+        const mats = MATERIALS.filter(m => r[m.key + '_used']).map(m => `${m.label}: ${r[m.key + '_used']}`).join(', ');
+        const snippet = (r.work_completed || '').slice(0, 40);
+        return `<tr><td>${r.date || ''}</td><td>${snippet}${snippet.length === 40 ? '…' : ''}</td><td>${mats || '—'}</td></tr>`;
+      }).join('');
+    }
+
+    /* =========================================================================
+       ESTIMATION BUILDER
+       ========================================================================= */
+    let phaseRows = [];
+    function renderPhaseBuilder() {
+      const wrap = document.getElementById('phaseBuilder');
+      wrap.innerHTML = phaseRows.map((p, i) => `
+    <div class="phase-row">
+      <input type="text" placeholder="ধাপের নাম (যেমন: Foundation)" value="${p.phase_name || ''}" data-idx="${i}" data-f="name">
+      <input type="date" value="${p.target_date || ''}" data-idx="${i}" data-f="date">
+      <button type="button" class="rm" data-idx="${i}">✕</button>
+    </div>
+  `).join('');
+      wrap.querySelectorAll('input').forEach(inp => {
+        inp.addEventListener('input', (e) => {
+          const i = +e.target.dataset.idx, f = e.target.dataset.f;
+          if (f === 'name') phaseRows[i].phase_name = e.target.value;
+          if (f === 'date') phaseRows[i].target_date = e.target.value;
+        });
+      });
+      wrap.querySelectorAll('.rm').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          phaseRows.splice(+e.target.dataset.idx, 1);
+          renderPhaseBuilder();
+        });
+      });
+    }
+
+    document.getElementById('addPhaseBtn').addEventListener('click', () => {
+      phaseRows.push({ phase_name: '', target_date: '', status: 'pending' });
+      renderPhaseBuilder();
+    });
+
+    async function loadEstimation() {
+      let data = await safeFetch(CONFIG.GET_ESTIMATION_URL);
+      if (!data) data = STATE.estimation;
+
+      if (data && (data.id || data.site_name)) {
+        STATE.estimation = data;
+        document.getElementById('e-site').value = data.site_name || '';
+        document.getElementById('e-budget').value = data.total_budget || '';
+        document.getElementById('e-start').value = data.start_date || '';
+        document.getElementById('e-end').value = data.target_completion_date || '';
+        document.getElementById('e-cement-qty').value = data.cement_planned || (data.planned && data.planned.cement) || '';
+        document.getElementById('e-cement-unit').value = data.cement_unit || 'বস্তা';
+        document.getElementById('e-rod-qty').value = data.rod_steel_planned || (data.planned && data.planned.rod_steel) || '';
+        document.getElementById('e-rod-unit').value = data.rod_steel_unit || 'টন';
+        document.getElementById('e-sand-qty').value = data.sand_planned || (data.planned && data.planned.sand) || '';
+        document.getElementById('e-sand-unit').value = data.sand_unit || 'ট্রাক';
+        document.getElementById('e-brick-qty').value = data.brick_planned || (data.planned && data.planned.brick) || '';
+        document.getElementById('e-brick-unit').value = data.brick_unit || 'পিস';
+        document.getElementById('e-concrete-qty').value = data.concrete_planned || (data.planned && data.planned.concrete) || '';
+        document.getElementById('e-concrete-unit').value = data.concrete_unit || 'সিএফটি';
+        document.getElementById('e-notes').value = data.notes || '';
+        phaseRows = Array.isArray(data.phases) ? data.phases : [];
+      } else {
+        phaseRows = [
+          { phase_name: 'Foundation', target_date: '', status: 'pending' },
+          { phase_name: 'Ground Floor', target_date: '', status: 'pending' }
+        ];
+      }
+      renderPhaseBuilder();
+    }
+
+    document.getElementById('estForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const msg = document.getElementById('estStatusMsg');
+      const btn = document.getElementById('estSubmitBtn');
+
+      const payload = {
+        id: (STATE.estimation && STATE.estimation.id) || ('EST-' + Date.now()),
+        site_name: val('e-site'),
+        total_budget: num('e-budget'),
+        start_date: val('e-start'),
+        target_completion_date: val('e-end'),
+        cement_planned: num('e-cement-qty'), cement_unit: val('e-cement-unit'),
+        rod_steel_planned: num('e-rod-qty'), rod_steel_unit: val('e-rod-unit'),
+        sand_planned: num('e-sand-qty'), sand_unit: val('e-sand-unit'),
+        brick_planned: num('e-brick-qty'), brick_unit: val('e-brick-unit'),
+        concrete_planned: num('e-concrete-qty'), concrete_unit: val('e-concrete-unit'),
+        planned: {
+          cement: num('e-cement-qty'),
+          rod_steel: num('e-rod-qty'),
+          sand: num('e-sand-qty'),
+          brick: num('e-brick-qty'),
+          concrete: num('e-concrete-qty')
+        },
+        phases: phaseRows.filter(p => p.phase_name),
+        notes: val('e-notes'),
+        is_active: true,
+        created_at: new Date().toISOString()
+      };
+
+      btn.disabled = true; btn.textContent = 'সংরক্ষণ হচ্ছে...';
+      const result = await safeFetch(CONFIG.SAVE_ESTIMATION_URL, {
+        method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload)
+      });
+
+      btn.disabled = false; btn.textContent = 'এস্টিমেশন সংরক্ষণ করুন';
+      localStorage.setItem('tg_site_estimation', JSON.stringify(payload));
+      STATE.estimation = payload; STATE.dashboard = null;
+      msg.textContent = '✔ এস্টিমেশন সংরক্ষিত হয়েছে'; msg.className = 'status-msg ok'; haptic('success');
+    });
+
+    /* =========================================================================
+       HISTORY VIEW
+       ========================================================================= */
+    async function loadHistory(fromDate, toDate) {
+      const list = document.getElementById('historyList');
+      list.innerHTML = '<div class="loading-row">লোড হচ্ছে...</div>';
+      let url = CONFIG.GET_HISTORY_URL;
+      const params = [];
+      if (fromDate) params.push('from=' + encodeURIComponent(fromDate));
+      if (toDate) params.push('to=' + encodeURIComponent(toDate));
+      if (params.length) url += '?' + params.join('&');
+
+      let data = await safeFetch(url);
+      let reports = (data && Array.isArray(data.reports)) ? data.reports : null;
+
+      if (!reports) {
+        reports = JSON.parse(localStorage.getItem('local_site_reports')) || [];
+      }
+
+      STATE.history = reports;
+      renderHistory(reports);
+    }
+
+    function renderHistory(reports) {
+      const list = document.getElementById('historyList');
+      if (!reports.length) { list.innerHTML = '<div class="empty-note">কোনো রিপোর্ট পাওয়া যায়নি</div>'; return; }
+      list.innerHTML = reports.map((r, i) => {
+        const snippet = (r.work_completed || '').slice(0, 34);
+        const fields = [
+          ['ইঞ্জিনিয়ার', r.engineer_name], ['সিমেন্ট', r.cement_used ? r.cement_used + ' ' + (r.cement_unit || '') : null],
+          ['রড/স্টিল', r.rod_steel_used ? r.rod_steel_used + ' ' + (r.rod_steel_unit || '') : null],
+          ['বালি', r.sand_used ? r.sand_used + ' ' + (r.sand_unit || '') : null],
+          ['ইট', r.brick_used ? r.brick_used + ' ' + (r.brick_unit || '') : null],
+          ['কংক্রিট', r.concrete_used ? r.concrete_used + ' ' + (r.concrete_unit || '') : null],
+          ['কাজ সম্পন্ন', r.work_completed], ['চলমান কাজ', r.work_in_progress],
+          ['স্টক অবস্থা', r.material_stock_status], ['সমস্যা', r.problems_or_issues], ['মন্তব্য', r.additional_notes]
+        ].filter(f => f[1]);
+
+        let customFieldsStr = '';
+        if (r.custom_fields && Object.keys(r.custom_fields).length > 0) {
+          customFieldsStr = Object.entries(r.custom_fields).map(([k, v]) => `<div class="kv"><b>${k}:</b> ${v}</div>`).join('');
+        }
+
+        return `<div class="hist-item">
+      <div class="hist-head" data-idx="${i}">
+        <span class="hd-date">${r.date || ''}</span>
+        <span class="hd-snip">${snippet}</span>
+        <span>▾</span>
+      </div>
+      <div class="hist-body" id="hist-body-${i}">
+        ${fields.map(f => `<div class="kv"><b>${f[0]}:</b> ${f[1]}</div>`).join('')}
+        ${customFieldsStr}
+      </div>
+    </div>`;
+      }).join('');
+
+      list.querySelectorAll('.hist-head').forEach(h => {
+        h.addEventListener('click', () => {
+          document.getElementById('hist-body-' + h.dataset.idx).classList.toggle('open');
+        });
+      });
+    }
+
+    document.getElementById('h-filter-btn').addEventListener('click', () => {
+      loadHistory(val('h-from'), val('h-to'));
+    });
+
+    document.getElementById('h-export-btn').addEventListener('click', () => {
+      const reports = STATE.history || [];
+      if (!reports.length) return;
+      const cols = Object.keys(reports[0]);
+      const csv = [cols.join(',')].concat(
+        reports.map(r => cols.map(c => `"${String(r[c] ?? '').replace(/"/g, '""')}"`).join(','))
+      ).join('\n');
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = 'site-reports-' + isoDate + '.csv';
+      link.click();
+    });
+
+    /* =========================================================================
+       SETUP / MASTER VIEW
+       ========================================================================= */
+    async function loadSetupView() {
+      renderCustomFieldsMasterList();
+      renderCustomFieldsInReport();
+
+      if (STATE.fallbackSheetUrl) {
+        document.getElementById('s-sheet-url').value = STATE.fallbackSheetUrl;
+      }
+
+      let data = await safeFetch(CONFIG.GET_SETUP_URL);
+      if (!data) data = STATE.setup;
+
+      if (data && data.company_name !== undefined) {
+        STATE.setup = data;
+        document.getElementById('s-company').value = data.company_name || '';
+        document.getElementById('s-site').value = data.site_name || '';
+        document.getElementById('s-engineer').value = data.engineer_name || '';
+        document.getElementById('s-email').value = data.report_email || '';
+        fillHeader(data);
+      }
+    }
+
+    document.getElementById('setupForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const msg = document.getElementById('setupStatusMsg');
+      const chip = document.getElementById('setupSavedChip');
+      const btn = document.getElementById('setupSubmitBtn');
+      const payload = {
+        id: '1', company_name: val('s-company'), site_name: val('s-site'),
+        engineer_name: val('s-engineer'), report_email: val('s-email'),
+        updated_at: new Date().toISOString()
+      };
+      btn.disabled = true; btn.textContent = 'সংরক্ষণ হচ্ছে...';
+      const result = await safeFetch(CONFIG.SAVE_SETUP_URL, {
+        method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload)
+      });
+      btn.disabled = false; btn.textContent = 'সংরক্ষণ করুন';
+      localStorage.setItem('tg_site_setup', JSON.stringify(payload));
+      STATE.setup = payload; fillHeader(payload); STATE.dashboard = null;
+      chip.classList.remove('hidden'); msg.textContent = ''; haptic('success');
+      setTimeout(() => chip.classList.add('hidden'), 3000);
+    });
+
+    /* =========================================================================
+       INITIALIZATION
+       ========================================================================= */
+    (async function init() {
+      renderCustomFieldsInReport();
+      await loadSetupView();
+      await loadDashboard();
+    })();
+  </script>
 </body>
+
 </html>
